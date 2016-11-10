@@ -19,7 +19,7 @@ public class WebConfig extends JFinalConfig{
 
 	@Override
 	public void configConstant(Constants constants) {
-		PropKit.use("config.properties");
+		PropKit.use("/home/aasdkl/RMS/src/main/java/config.properties");
 		
 		constants.setDevMode(PropKit.getBoolean("devMode", false));
 		constants.setBaseViewPath("html");
