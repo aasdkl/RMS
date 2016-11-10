@@ -17,7 +17,6 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import rms.controller.MainController;
 
 public class WebConfig extends JFinalConfig{
-public static boolean linked=true;
 	@Override
 	public void configConstant(Constants constants) {
 		
@@ -32,16 +31,12 @@ public static boolean linked=true;
 	
 	@Override
 	public void configPlugin(Plugins plugins) {
-		try{
 		DruidPlugin cp = new DruidPlugin("jdbc:mysql://localhost:3306/risk?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "");
 		plugins.add(cp);
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(cp);
 		arp.setDialect(new MysqlDialect());
 		_MappingKit.mapping(arp);
 		plugins.add(arp);
-		} catch(Exception e) {
-			linked=false;
-		}
 	}
 
 	@Override
