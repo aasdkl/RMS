@@ -31,7 +31,7 @@ public class WebConfig extends JFinalConfig{
 	
 	@Override
 	public void configPlugin(Plugins plugins) {
-		DruidPlugin cp = new DruidPlugin("jdbc:mysql://localhost:3306/risk?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "");
+		DruidPlugin cp = new DruidPlugin("jdbc:mysql://172.17.0.2:3306/risk?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "");
 		plugins.add(cp);
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(cp);
 		arp.setDialect(new MysqlDialect());
