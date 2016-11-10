@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- Site Properties -->
+		<title>当前项目</title>
+
+		<base href="/RMS/" />
+		<link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+	</head>
+
+	<body>
+
+		<div class="main ui full height container">
+
+			<div class="ui teal left fixed vertical menu">
+				<div class="item">
+					<img class="ui centered mini image" src="assets/images/logo.png">
+				</div>
+
+				<div class="active item">
+					<a class="header" href="/">项目列表</a>
+					<div class="menu">
+					<#list projects as t>
+				      <a class="project item" data-id="${t.id}">${t.name}</a>
+				    </#list>
+				    </div>
+				</div>
+
+				<a class="item" href="/logout"><i class="sign out icon"></i>退出账户</a>
+
+			</div>
+
+			<div class="ui grid">
+				<div class="two wide column"></div>
+				<div class="fourteen wide column">
+
+					<div class="ui vertical segment">
+						<div class="ui container">
+							<h1 class="ui header">
+							当前项目
+						</h1>
+						</div>
+					</div>
+
+
+<table class="ui selectable single line fixed striped large table">
+  <thead>
+    <tr>
+    <th class="three wide">名称</th>
+    <th class="ten wide">描述</th>
+    <th class="one wide"></th>
+    <th class="two wide">风险数</th>
+  </tr></thead>
+  <tbody>
+
+	<#list projects as t>
+    <tr class="project" data-id="${t.id}">
+      <td>
+        <i class="folder icon"></i> ${t.name}
+      </td>
+      <td>${((t.description)?length>0)?string(t.description,"暂无描述")}</td>
+      <td class="modify center aligned"><i class="write icon"></i></td>
+      <td>
+      <div class="ui red circular label">0</div>
+      <div class="ui yellow circular label">0</div>
+      <div class="ui green circular label">0</div>
+	  </td>
+    </tr>
+    </#list>
+ 
+  </tbody>
+
+<tfoot class="full-width">
+    <tr>
+      <th id="addProject" colspan="4" class="center aligned">
+          <i class="add icon"></i> 新增项目
+      </th>
+    </tr>
+  </tfoot>
+
+</table>
+
+				</div>
+
+			</div>
+		</div>
+
+
+
+<div class="ui add modal">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">Loading</div>
+	</div>
+    <div class="header">
+      新增一个项目
+    </div>
+    <div class="content">
+      <form class="ui form" method="post">
+        <div class="ui dividing header">
+        <div class="ui big transparent fluid input">
+		  <input type="text" name="name" placeholder="项目名称">
+		</div>
+		</div>
+        <div class="field">
+          <textarea name="desc" placeholder="项目描述(可以不填)"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui no button">取消</div>
+      <div class="ui yes disabled submit green button">新增</div>
+    </div>
+</div>
+
+
+<div class="ui modify modal" data-id="">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">Loading</div>
+	</div>
+    <div class="header">
+      修改项目	      <div class="ui red right floated delete button">删除项目</div>
+    </div>
+    <div class="content">
+      <form class="ui form" method="post">
+        <div class="ui dividing header">
+        <div class="ui big transparent fluid input">
+		  <input type="text" name="name" placeholder="项目名称">
+		</div>
+		</div>
+        <div class="field">
+          <textarea name="desc" placeholder="项目描述(可以不填)"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui no button">取消</div>
+      <div class="ui yes submit green button">修改</div>
+    </div>
+</div>
+
+<div class="ui small confirm modal">
+    <div class="header">
+		确认删除？
+    </div>
+    <div class="content">
+      <p>删除该项目会删除其下的风险条目</p>
+    </div>
+    <div class="actions">
+      <div class="ui positive button">
+        取消
+      </div>
+      <div class="ui negative right labeled icon button">
+       确认删除
+        <i class="warning icon"></i>
+      </div>
+    </div>
+  </div>
+
+
+
+		<script src="assets/jquery.min.js"></script>
+		<script src="assets/semantic.min.js"></script>
+		<script src="js/index.js"></script>
+
+	</body>
+
+</html>

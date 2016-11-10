@@ -1,0 +1,42 @@
+﻿body {
+    background-color: #FAFAFA;
+}
+
+.menu a.header {
+	color: rgba(0,0,0,.85);
+}
+.menu a.header:hover {
+	color: black;
+}
+
+h1:hover .ui.setting.icon {
+	opacity:1;
+}
+
+h1 {
+	cursor: pointer;
+}
+	
+h1 .ui.setting.icon {
+	margin-top: -.4em;
+	margin-left: .4em;
+	opacity:.4;
+	font-size: 1em;
+}
+
+.ui.accordion.menu .item .title>.dropdown.icon{
+	float: inherit;
+	margin:inherit;
+	margin-left:-.5em;
+	margin-right:.1em;
+	margin-top:.1em;
+	transform: inherit;
+}
+
+.ui.segments>.ui.horizontal.segments{
+	background-color:white;
+}
+
+.ui.segments {
+	cursor: default;
+}

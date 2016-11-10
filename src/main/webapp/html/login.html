@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- Site Properties -->
+		<title>软件项目风险管理系统</title>
+		<base href="/RMS/" />
+
+		<link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
+		<link rel="stylesheet" type="text/css" href="css/login.css">
+
+	</head>
+
+	<body>
+		<div class="ui middle aligned center aligned grid">
+		
+			<div class="column">
+			
+				<h2 class="ui teal image header">
+				<img src="assets/images/logo.png" class="image">
+				<div class="content">软件项目风险管理系统</div>
+				</h2>
+
+
+<div class="ui text shape">
+<div class="sides">
+<div class="active side">
+				<form id="logForm" class="ui large form" method="post">
+					<div class="ui stacked segment">
+						<div class="field">
+							<div class="ui left icon input">
+								<i class="user icon"></i> <input type="text" name="account" placeholder="请输入您的帐户名" />
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui left icon input">
+								<i class="lock icon"></i> <input type="password" name="password" placeholder="请输入您的密码" />
+							</div>
+						</div>
+						<div class="ui fluid large teal submit button">登录</div>
+					</div>
+					<div class="ui error message"></div>
+				</form>
+				<div class="ui message">
+			        还没有帐号? <a href="#">注册</a>
+			    </div>
+</div>
+<div class="side">
+				<form id="regForm" class="ui large form" method="post">
+					<div class="ui stacked segment">
+						<div class="field">
+							<div class="ui left icon input">
+								<i class="user icon"></i> <input type="text" name="account" placeholder="请输入帐户名" />
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui left icon input">
+								<i class="lock icon"></i> <input type="password" name="password1" placeholder="请输入密码" />
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui left icon input">
+								<i class="lock icon"></i> <input type="password" name="password2" placeholder="请确认密码" />
+							</div>
+						</div>
+						<div class="ui fluid large teal submit button">注册</div>
+					</div>
+					<div class="ui error message"></div>
+				</form>
+				<div class="ui message">
+			       已有帐号? <a href="#">登录</a>
+			    </div>
+</div>
+</div>
+</div>
+			</div>
+		</div>
+
+		<script src="assets/jquery.min.js"></script>
+		<script src="assets/semantic.min.js"></script>
+		<script src="js/login.js"></script>
+
+	</body>
+
+</html>

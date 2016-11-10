@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+		<!-- Site Properties -->
+		<title>风险列表</title>
+
+		<base href="/RMS/" />
+
+		<link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
+		<link rel="stylesheet" type="text/css" href="css/risk.css">
+	</head>
+
+	<body>
+
+		<div class="main ui full height container">
+
+			<div class="ui teal left fixed vertical menu">
+				<div class="item">
+					<img class="ui centered mini image" src="assets/images/logo.png">
+				</div>
+
+				<div class="active item">
+					<a class="header" href="/">项目列表</a>
+					<div class="menu">
+					<#list projects as t>
+				      <a class="project ${(t.id==project.id)?string('active','')} item" data-id="${t.id}">${t.name}</a>
+				    </#list>
+				    </div>
+				</div>
+
+				<a class="item" href="/logout"><i class="sign out icon"></i>退出账户</a>
+
+			</div>
+
+			<div class="ui grid">
+				<div class="two wide column"></div>
+				<div class="fourteen wide column">
+
+					<div class="ui vertical segment">
+						<div class="ui container">
+							<h1 class="ui header">
+							风险条目 - ${project.name}
+							<i class="ui setting icon"></i>
+							</h1>
+						</div>
+					</div>
+
+<div class="ui massive accordion vertical fluid menu">
+
+  <a class="item">
+    <div class="title">
+      <i class="dropdown icon"></i><div class="ui red horizontal label">已发生</div>可能导致严重错误
+    </div>
+    <div class="content">
+
+    <div class="ui segments">
+<div class="ui horizontal segments">
+    <div class="ui segment">
+      <p><b>可能性：</b><span class="ui red horizontal label">高</span></p>
+    </div>
+    <div class="ui segment">
+      <p><b>影响程度：</b><span class="ui red horizontal label">高</span></p>
+    </div>
+    <div class="ui segment">
+      <p><b>提交者：</b><span class="ui basic label">开发者<span class="detail">薛家豪</span></span></p>
+    </div>
+</div>
+    <div class="ui segment">
+      <h4 class="ui header">风险描述：</h4>
+	  <p>内容在这里<br>我不知道会发生什么<br>或许很可怕</p>
+	</div>
+	
+	</div>
+	
+    <div class="ui segments">
+	<div class="ui horizontal segments">
+    <div class="ui segment">
+      <p><b>监测项：</b><span class="ui teal label">项目规模</span></p>
+    </div>
+    <div class="ui segment">
+      <p><b>触发器/阈值：</b><span class="ui teal label">超过1G</span></p>
+    </div>
+    <div class="ui segment">
+      <p><b>追踪者：</b><span class="ui basic label">开发者<span class="detail">薛家豪</span></span></p>
+    </div>
+</div>
+    <div class="ui segment">
+      <h4 class="ui header">应对措施：</h4>
+	  <p>内容在这里<br>我不知道会发生什么<br>或许很可怕</p>
+	</div>
+	</div>
+
+    <div class="ui segments">
+    <div class="ui segment">
+    </div>
+    <div class="ui segment">
+<table class="ui very basic striped selectable fixed single line table">
+  <thead>
+    <tr><th>Name</th>
+    <th>Status</th>
+    <th>Another Status</th>
+    <th>Notes</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="collapsing">John</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Jamie</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>Requires call</td>
+    </tr>
+    <tr>
+      <td>John</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Jamie</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>Requires call</td>
+    </tr>
+    <tr>
+      <td>John</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Jamie</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>Requires call</td>
+    </tr>
+    <tr>
+      <td>John</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Jamie</td>
+      <td>Approved</td>
+      <td>Approved</td>
+      <td>Requires call</td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+	</div>
+	
+    </div>
+  </a>
+  
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</div>
+
+			</div>
+		</div>
+
+
+
+<div class="ui modify modal" data-id="${project.id}" data-name="${project.name}" data-des="${project.description}" data-rid="<#if role??>role.id</#if>" data-role="<#if role??>role.role</#if>">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">提交中</div>
+	</div>
+    <div class="header">
+      修改项目	      <div class="ui red right floated delete button">删除项目</div>
+    </div>
+    <div class="content">
+      <form class="ui form" method="post">
+        <div class="field">
+            <label> 项目修改 </label>
+        	<div class="ui input">
+				  <input type="text" name="name" placeholder="项目名称" value=''>
+			</div>
+
+		</div>
+        <div class="field">
+          <textarea name="desc" placeholder="项目描述(可以不填)"></textarea>
+        </div>
+        <div class="field">
+        	<label> 角色修改 </label>
+        	<div class="ui input">
+				<input type="text" name="role" placeholder="请输入您的角色"  value=''/>
+			</div>
+        </div>
+        
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui no button">取消</div>
+      <div class="ui yes submit green button">修改</div>
+    </div>
+</div>
+
+<div class="ui small confirm modal">
+    <div class="header">
+		确认删除？
+    </div>
+    <div class="content">
+      <p>删除该项目会删除其下的风险条目</p>
+    </div>
+    <div class="actions">
+      <div class="ui positive button">
+        取消
+      </div>
+      <div class="ui negative right labeled icon button">
+       确认删除
+        <i class="warning icon"></i>
+      </div>
+    </div>
+  </div>
+
+
+<div class="ui small role modal">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">提交中</div>
+	</div>
+    <div class="header">
+		角色确认
+    </div>
+    <div class="content">
+      <p>请输入在项目中扮演的角色，比如：开发者，架构师，项目经理等</p>
+		<div class="ui input">
+			<input type="text" name="role" placeholder="请输入您的角色" />
+		</div>
+    </div>
+    <div class="actions">
+      <div class="ui teal disabled icon button">
+       确认角色
+      </div>
+    </div>
+  </div>
+
+
+
+		<script src="assets/jquery.min.js"></script>
+		<script src="assets/semantic.min.js"></script>
+		<script src="js/risk.js"></script>
+		<script >
+		if(!"${role!''}"){
+			var role=$('.role.modal');
+//	    	role.modal({});
+	    	role.modal('setting', 'closable', false).modal('show');
+	        role.find('input').keypress(function (e){
+	        	if(e.keyCode==13 && $(this).val()!='') {
+	        		role.find('.teal.button')[0].click();
+	        	}
+	        });
+	        role.find('input').bind("input propertychange", function() {
+	            if(role.find('input').val()==''){
+	            	role.find('.teal.button').addClass('disabled');
+	        	} else{
+	        		role.find('.teal.button').removeClass('disabled');
+	        	}
+	       	});
+	    	role.find('.teal.button').click(function() {
+	    		role.find('.ui.dimmer').dimmer('show');
+	            $.ajax({
+	                url: '/addRole',
+	                type: 'post',
+	                dataType:'json',
+	                data: "role="+role.find('input').val()+"&pid=${project.id}",
+	                success: function(msg) {
+	                    if(msg.result!="成功"){
+	                    	alert('出错');
+	                    }
+			        	role.modal('hide');
+	                }
+	            });
+	        });
+	    }
+		</script>
+
+	</body>
+
+</html>
