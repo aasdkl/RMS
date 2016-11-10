@@ -40,7 +40,7 @@ public static boolean linked=true;
 		_MappingKit.mapping(arp);
 		plugins.add(arp);
 		} catch(Exception e) {
-			net=false;
+			linked=false;
 		}
 	}
 
