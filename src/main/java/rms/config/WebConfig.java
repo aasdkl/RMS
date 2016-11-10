@@ -21,9 +21,7 @@ public class WebConfig extends JFinalConfig{
 
 	@Override
 	public void configConstant(Constants constants) {
-		PropKit.use(new File("/home/aasdkl/RMS/src/main/java/config.properties"));
 		
-		constants.setDevMode(PropKit.getBoolean("devMode", false));
 		constants.setBaseViewPath("html");
 		constants.setJsonFactory(new FastJsonFactory()); // using fast json lib
 	}
@@ -35,10 +33,9 @@ public class WebConfig extends JFinalConfig{
 	
 	@Override
 	public void configPlugin(Plugins plugins) {
-		C3p0Plugin cp = new C3p0Plugin(PropKit.get("jdbc"), PropKit.get("user"), PropKit.get("password"));
+		C3p0Plugin cp = new C3p0Plugin("jdbc:mysql://localhost/risk?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "");
 		plugins.add(cp);
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(cp);
-		arp.setShowSql(PropKit.getBoolean("showSql", false));
 		arp.setDialect(new MysqlDialect());
 		_MappingKit.mapping(arp);
 		plugins.add(arp);
