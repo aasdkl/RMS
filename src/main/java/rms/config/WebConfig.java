@@ -1,5 +1,7 @@
 package rms.config;
 
+import java.io.File;
+
 import rms.model._MappingKit;
 
 import com.jfinal.config.Constants;
@@ -19,7 +21,7 @@ public class WebConfig extends JFinalConfig{
 
 	@Override
 	public void configConstant(Constants constants) {
-		PropKit.use("/home/aasdkl/RMS/src/main/java/config.properties");
+		PropKit.use(new File("/home/aasdkl/RMS/src/main/java/config.properties"));
 		
 		constants.setDevMode(PropKit.getBoolean("devMode", false));
 		constants.setBaseViewPath("html");
