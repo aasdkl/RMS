@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import rms.model.Role;
 import rms.model.User;
+import rms.config.WebConfig;
 import rms.interceptor.IndexInterceptor;
 import rms.interceptor.LoginInterceptor;
 import rms.services.*;
@@ -27,8 +28,11 @@ public class MainController extends Controller {
     @Clear
     @Before(IndexInterceptor.class)
     public void log() {
+		if(WebConfig.linked){
+		render("login.html");
+		} else {
 		renderHtml("由于使用了数据库，准备使用一个tomcat容器，一个mysql容器<br>然而两个容器尚未link成功，所以首页无法显示<br>（我本来想容器内部可以调用宿主机的数据库的，可是遇到了许多坑……）");
-//		render("login.html");
+		}
 	}
     
     @Clear
