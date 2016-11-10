@@ -10,9 +10,10 @@ def mvnHome = tool 'M3'
 sh "${mvnHome}/bin/mvn -B clean package"
 }
 stage('deploy') {
-sh "docker stop my || true"
-sh "docker rm my || true"
-sh "docker run --name my -p 11111:8080 -d tomcat:8.5"
+sh "docker restart db001 || true"
+sh "docker stop tomcat001 || true"
+sh "docker rm tomcat001 || true"
+sh "docker run --name tomcat001 -p 11111:8080 -d --link db001:tomysql tomcat:8.5"
 sh "docker cp target/RMS.war my:/usr/local/tomcat/webapps"
 }
 stage('results') {
