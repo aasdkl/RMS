@@ -40,3 +40,10 @@ h1 .ui.setting.icon {
 .ui.segments {
 	cursor: default;
 }
+
+.accordion.menu>.add.item>.segment{
+	padding: 0;
+}
+.addRisk.modal .header .dropdown .label{
+	margin:0 !important;
+}

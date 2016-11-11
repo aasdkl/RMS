@@ -6,7 +6,8 @@
     
 	var modifyModal = $('.modify.modal');
 	var confirmModal = $('.confirm.modal');
-
+	var addRiskModal = $('.addRisk.modal');
+	
 	$('h1').click(function(){
 		modifyModal.find('textarea').val(modifyModal.data('des'));
 		modifyModal.find('input:eq(0)').val(modifyModal.data('name'));
@@ -68,7 +69,7 @@
             }
         });
     });
-
+    
     
     $('.ui.accordion').accordion({exclusive:false});
     
@@ -78,10 +79,33 @@
     	}
     })
     
-    $('.accordion.menu>.ui.segments').hover(
+    $('.accordion.menu .ui.segments').hover(
        function(){ $(this).addClass('raised'); },
        function(){ $(this).removeClass('raised'); }
     )
+    
+    
+	addRiskModal.modal({autofocus: false});
+
+    $('.accordion.menu>.add.item').click(function(){
+    	addRiskModal.modal('show');
+    })
+    
+    colors1=['yellow','red','green'];
+    colors2=['red','yellow','green'];
+    addRiskModal.find('.header .ui.dropdown').dropdown({
+    	onChange:function(value,text){
+    		choose=colors1;
+    		if(text.length==1){
+    			choose=colors2;
+    			$(this).prev().removeClass(choose.join(' '));
+    			$(this).prev().addClass(choose[value]);
+    		}
+	    	$(this).removeClass(choose.join(' '));
+	    	$(this).addClass(choose[value]);
+	   	}
+    });
+    
     
 });
 
