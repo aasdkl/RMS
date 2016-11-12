@@ -105,11 +105,11 @@ public abstract class BaseRisk<M extends BaseRisk<M>> extends Model<M> implement
 		return get("publisher");
 	}
 
-	public void setTrailer(java.lang.Integer trailer) {
+	public void setTrailer(java.lang.String trailer) {
 		set("trailer", trailer);
 	}
 
-	public java.lang.Integer getTrailer() {
+	public java.lang.String getTrailer() {
 		return get("trailer");
 	}
 

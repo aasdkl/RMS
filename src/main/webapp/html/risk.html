@@ -151,7 +151,7 @@
 
 
 
-<div class="ui addRisk modal" data-id="${project.id}" data-rid="<#if role??>role.id</#if>" data-role="<#if role??>role.role</#if>">
+<div class="ui addRisk modal" data-id="${project.id}">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
@@ -162,9 +162,9 @@
       <form class="ui form" method="post">
         <div class="ui dividing header">
         
-<div class="ui big transparent fluid input">
+<div class="ui big transparent fluid required input">
 
-<div class="ui yellow floating dropdown button">
+<div class="ui yellow floating dropdown button" data-value="0">
   <div class="text">未发生</div>
   <div class="menu">
       <div class="item" data-value="0" data-text="未发生"><div class="ui yellow label">未发生</div></div>
@@ -173,13 +173,13 @@
   </div>
 </div>
 
-  <input type="text" name="name" placeholder="条目名称">
+  <input type="text" name="name" placeholder="风险名称">
 
 <div class="ui left labeled button" tabindex="0">
   <a class="ui basic red label">
     可能性
   </a>
-  <div class="ui red right floating dropdown button">
+  <div class="ui red right floating dropdown button" data-value="0">
     <div class="text">高</div>
     <div class="menu">
         <div class="item" data-value="0" data-text="高"><div class="ui red label">高</div></div>
@@ -192,7 +192,7 @@
   <a class="ui basic red label">
     影响程度
   </a>
-  <div class="ui red right floating dropdown button">
+  <div class="ui red right floating dropdown button" data-value="0">
     <div class="text">高</div>
     <div class="menu">
         <div class="item" data-value="0" data-text="高"><div class="ui red label">高</div></div>
@@ -202,14 +202,43 @@
   </div>
 </div>
   
-
 </div>
-
-
 		</div>
 		
         <div class="field">
-          <textarea name="desc" placeholder="风险描述"></textarea>
+	        	        	<label> 风险描述 </label>
+          <textarea name="desc" placeholder="风险描述（可不填）"></textarea>
+        </div>
+        
+        <div class="ui divider"></div>
+        <div class="three fields">
+	        <div class="required field">
+	        	        	<label> 监测项 </label>
+        	<div class="ui input">
+				<input type="text" name="spy" placeholder="所要监测的事项"/>
+			</div>
+	        	
+	        </div>
+	        <div class="required field">
+	        	        	<label> 触发器/阈值 </label>
+        	<div class="ui input">
+				<input type="text" name="trigger" placeholder="何时采用措施"/>
+			</div>
+	        	
+	        </div>
+	        <div class="field">
+	        	        	<label> 追踪者 </label>
+        	<div class="ui input">
+				<input type="text" name="trailer" placeholder="第一监测人"/>
+			</div>
+	        	
+	        </div>
+        </div>
+        
+        		
+        <div class="required field">
+	        	        	<label> 应对措施 </label>
+          <textarea name="desc" placeholder="应对措施"></textarea>
         </div>
         
       </form>

@@ -11,7 +11,7 @@ public class RoleManagementServicesImpl implements RoleManagementServices{
 
 	@Override
 	public BaseResult addRole(int uid, int pid, String role) {
-		if (!role.equals("")&&role!=null) {
+		if (role!=null&&!role.equals("")) {
 			if (Role.dao.add(uid, pid, role)) {
 				return BaseResult.SUCCESS;
 			}
@@ -26,7 +26,7 @@ public class RoleManagementServicesImpl implements RoleManagementServices{
 
 	@Override
 	public BaseResult modifyRole(int rid, String role) {
-		if (!role.equals("")&&role!=null) {
+		if (role!=null&&!role.equals("")) {
 			if (Role.dao.modify(rid, role)) {
 				return BaseResult.SUCCESS;
 			}

@@ -27,4 +27,13 @@ import rms.model.base.BaseRisk;
 public class Risk extends BaseRisk<Risk> {
 	public static final Risk dao = new Risk();
 
+	public boolean add(int uid, int pid, int state, String name,
+			int possibility, int damage, String desc, String spy,
+			String trigger, String trailer, String plan) {
+		return new Risk().set("title", name).set("state", state).set("content", desc)
+				.set("probability", possibility).set("effect", damage).set("spy", spy)
+				.set("avoid", "").set("switcher", trigger).set("handle", plan).set("trailer", trailer)
+				.set("project", pid).set("publisher", uid).save();
+	}
+
 }

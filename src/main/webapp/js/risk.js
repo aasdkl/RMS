@@ -89,7 +89,17 @@
 
     $('.accordion.menu>.add.item').click(function(){
     	addRiskModal.modal('show');
-    })
+    });
+    
+    addRiskModal.find('.labeled.button>.label').click(function(){
+    	n=$(this).next();
+    	if(n.hasClass('visible')){
+    		n.dropdown('hide');
+    	} else {
+    		n.dropdown('show');
+    	}
+//    	$(this).next().dropdown('toggle');
+    });
     
     colors1=['yellow','red','green'];
     colors2=['red','yellow','green'];
@@ -105,7 +115,55 @@
 	    	$(this).addClass(choose[value]);
 	   	}
     });
+    addRiskModal.find('.no.button').click(function(){
+    	addRiskModal.modal('hide');
+    })
     
+    t=addRiskModal.find('.required input, .required textarea');
+    t.bind("input propertychange", function() {
+    	num=0;
+    	t.each(function(){
+    		if($(this).val()!=''){
+    			num=num+1;
+    		}
+    	});
+        if(num==t.length){
+        	addRiskModal.find('.yes.button').removeClass('disabled');
+    	} else{
+    		addRiskModal.find('.yes.button').addClass('disabled');
+    	}
+   	});
+
+    addRiskModal.find('.yes.button').click(function(){
+    	t=addRiskModal.find('input,textarea,.dropdown');
+    	var fields = {
+        	state: $(t[0]).data('value'),
+        	name: t[1].value,
+        	possibility: $(t[2]).data('value'),
+        	damage: $(t[3]).data('value'),
+        	desc: t[4].value,
+        	spy: t[5].value,
+        	trigger: t[6].value,
+        	trailer: t[7].value,
+        	plan: t[8].value,
+        	pid: addRiskModal.data('id')
+        };
+    	modifyModal.find('.ui.dimmer').dimmer('show');
+        $.ajax({
+            url: '/RMS/addRisk',
+            type: 'post',
+            dataType:'json',
+            data: fields,
+            success: function(msg) {
+                if(msg.result!="成功"){
+                	alert('出错');
+                }
+                modifyModal.find('.ui.dimmer').dimmer('hide');
+                window.location.reload();
+            }
+        });
+    });
+
     
 });
 

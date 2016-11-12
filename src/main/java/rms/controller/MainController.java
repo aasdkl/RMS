@@ -122,7 +122,6 @@ public class MainController extends Controller {
     }
     
     // -----------------------------risk--------------------------
-
     public void risk() {
     	String id = getPara();
     	if (id==null||id.isEmpty()||!isInteger(id)) {
@@ -147,7 +146,6 @@ public class MainController extends Controller {
         return pattern.matcher(str).matches();
     }
     
-    
     public void addRole() {
     	int uid = getLoginId();
     	int pid = getParaToInt("pid");
@@ -158,4 +156,24 @@ public class MainController extends Controller {
     	
     	renderJson();
     }
+    
+    public void addRisk() {
+    	int state=getParaToInt("state");
+    	String name=getPara("name");
+    	int possibility=getParaToInt("possibility");
+    	int damage=getParaToInt("damage");
+    	String desc=getPara("desc");
+    	String spy=getPara("spy");
+    	String trigger=getPara("trigger");
+    	String trailer=getPara("trailer");
+    	String plan=getPara("plan");
+    	int pid=getParaToInt("pid");
+    	int uid=getLoginId();
+
+    	BaseResult result = riskManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
+    	setAttr("result", result.getInfo());
+    	
+    	renderJson();
+    }
+    
 }
