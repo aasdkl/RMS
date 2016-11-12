@@ -258,7 +258,7 @@
 
 
 
-<div class="ui modify modal" data-id="${project.id}" data-name="${project.name}" data-des="${project.description}" data-rid="<#if role??>role.id</#if>" data-role="<#if role??>role.role</#if>">
+<div class="ui modify modal" data-id="${project.id}" data-name="${project.name}" data-des="${project.description}" data-rid="<#if role??>${role.id}</#if>" data-role="<#if role??>${role.role}</#if>">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
