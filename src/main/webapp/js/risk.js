@@ -9,9 +9,6 @@
 	var addRiskModal = $('.addRisk.modal');
 	
 	$('h1').click(function(){
-		modifyModal.find('textarea').val(modifyModal.data('des'));
-		modifyModal.find('input:eq(0)').val(modifyModal.data('name'));
-		modifyModal.find('input:eq(1)').val(modifyModal.data('role'));
     	modifyModal.modal('show');
     });
     

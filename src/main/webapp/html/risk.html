@@ -258,7 +258,7 @@
 
 
 
-<div class="ui modify modal" data-id="${project.id}" data-name="${project.name}" data-des="${project.description}" data-rid="<#if role??>${role.id}</#if>" data-role="<#if role??>${role.role}</#if>">
+<div class="ui modify modal" data-id="${project.id}" data-rid="<#if role??>${role.id}</#if>">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
@@ -270,17 +270,17 @@
         <div class="field">
             <label> 项目修改 </label>
         	<div class="ui input">
-				  <input type="text" name="name" placeholder="项目名称" value=''>
+				  <input type="text" name="name" placeholder="项目名称" value='${project.name}'>
 			</div>
 
 		</div>
         <div class="field">
-          <textarea name="desc" placeholder="项目描述(可以不填)"></textarea>
+          <textarea name="desc" placeholder="项目描述(可以不填)">${project.description}</textarea>
         </div>
         <div class="field">
         	<label> 角色修改 </label>
         	<div class="ui input">
-				<input type="text" name="role" placeholder="请输入您的角色"  value=''/>
+				<input type="text" name="role" placeholder="请输入您的角色"  value='<#if role??>${role.role}</#if>'/>
 			</div>
         </div>
         
