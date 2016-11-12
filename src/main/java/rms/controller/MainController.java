@@ -122,7 +122,10 @@ public class MainController extends Controller {
     }
     
     // -----------------------------risk--------------------------
+//@Clear
     public void risk() {
+//UserVO result = userManageservice.login("qwe", "qwe");
+//setLogin(result);
     	String id = getPara();
     	if (id==null||id.isEmpty()||!isInteger(id)) {
 			redirect("/");
