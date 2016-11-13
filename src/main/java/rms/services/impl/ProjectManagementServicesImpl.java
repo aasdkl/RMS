@@ -2,7 +2,11 @@ package rms.services.impl;
 
 import java.util.List;
 
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.tx.Tx;
+
 import rms.model.Project;
+import rms.model.Risk;
 import rms.services.ProjectManagementServices;
 import rms.vo.ProjectVO;
 import rms.vo.constant.BaseResult;
@@ -34,12 +38,18 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 		return BaseResult.UNEXPECTED_ERROR;
 	}
 
+    @Before(Tx.class)
 	@Override
 	public BaseResult deleteProject(int id) {
-		boolean result=new Project().deleteById(id);
-		// TODO foreign key
-		if (result) {
+    	try {
+    		List<Risk> risks= new Risk().find("select * from risk where project=?",id);
+    		for (Risk risk : risks) {
+				risk.delete();
+			}
+			new Project().deleteById(id);
 			return BaseResult.SUCCESS;
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 		return BaseResult.UNEXPECTED_ERROR;
 	}
@@ -53,6 +63,24 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 		vo.setRisks(project.getRisks());
 		return vo;
 	}
+
+	
+	
+	// risks
+	@Override
+	public BaseResult addRisk(int uid, int pid, int state, String name,
+			int possibility, int damage, String desc, String spy,
+			String trigger, String trailer, String plan) {
+
+		if (name!=null&&!name.equals("")) {
+			if (new Risk().add(uid, pid, state, name, possibility, damage, desc, spy, trigger, trailer, plan)) {
+				return BaseResult.SUCCESS;
+			}
+		}
+		
+		return BaseResult.UNEXPECTED_ERROR;
+	}
+
 
 	
 }

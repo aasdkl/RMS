@@ -2,9 +2,7 @@ package rms.controller;
 
 import java.util.regex.Pattern;
 
-import rms.model.Role;
 import rms.model.User;
-import rms.config.WebConfig;
 import rms.interceptor.IndexInterceptor;
 import rms.interceptor.LoginInterceptor;
 import rms.services.*;
@@ -84,6 +82,7 @@ public class MainController extends Controller {
     // -----------------------------projects--------------------------
     public void index() {
     	setAttr("projects", projectManageservice.getProjects());
+    	setAttr("risks", riskManageservice.getRiskNum());
     	render("index.html");
     }
 
@@ -122,10 +121,10 @@ public class MainController extends Controller {
     }
     
     // -----------------------------risk--------------------------
-//@Clear
+@Clear
     public void risk() {
-//UserVO result = userManageservice.login("qwe", "qwe");
-//setLogin(result);
+UserVO result = userManageservice.login("qwe", "qwe");
+setLogin(result);
     	String id = getPara();
     	if (id==null||id.isEmpty()||!isInteger(id)) {
 			redirect("/");
@@ -160,6 +159,7 @@ public class MainController extends Controller {
     	renderJson();
     }
     
+    
     public void addRisk() {
     	int state=getParaToInt("state");
     	String name=getPara("name");
@@ -173,7 +173,7 @@ public class MainController extends Controller {
     	int pid=getParaToInt("pid");
     	int uid=getLoginId();
 
-    	BaseResult result = riskManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
+    	BaseResult result = projectManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
     	setAttr("result", result.getInfo());
     	
     	renderJson();

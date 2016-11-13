@@ -67,9 +67,15 @@
       <td>${((t.description)?length>0)?string(t.description,"暂无描述")}</td>
       <td class="modify center aligned"><i class="write icon"></i></td>
       <td>
+      <#if risks.get(t.id)??>
+      <div class="ui red circular label">${risks.get(t.id).high}</div>
+      <div class="ui yellow circular label">${risks.get(t.id).mid}</div>
+      <div class="ui green circular label">${risks.get(t.id).low}</div>
+      <#else>
       <div class="ui red circular label">0</div>
       <div class="ui yellow circular label">0</div>
       <div class="ui green circular label">0</div>
+      </#if>
 	  </td>
     </tr>
     </#list>

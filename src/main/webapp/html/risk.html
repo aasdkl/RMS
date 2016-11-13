@@ -52,9 +52,27 @@
 
 <div class="ui massive accordion vertical fluid menu">
 
+					<#list risk as t>
   <a class="item">
     <div class="title">
-      <i class="dropdown icon"></i><div class="ui red horizontal label">已发生</div><b>可能导致严重错误</b>
+      <i class="dropdown icon"></i>
+      
+      <#if t.state==0>
+      <div class="ui yellow horizontal label">
+      		未发生
+      </div>
+ 	  <#elseif t.state==1>
+      <div class="ui red horizontal label">
+      		已发生
+      </div>
+	  <#else>
+      <div class="ui green horizontal label">
+      		已消除
+      </div>
+	  </#if>
+      
+      
+      <b>${t.title}</b>
     </div>
     <div class="content">
 
@@ -62,55 +80,85 @@
 			<div class="ui horizontal segments">
 				<div class="ui segment">
 					<p>
-						<b>可能性：</b><span class="ui red horizontal label">高</span>
+						<b>可能性：</b>
+						<#if t.probability==0>
+						<span class="ui red horizontal label">
+						高
+						</span>
+						<#elseif t.probability==1>
+						<span class="ui yellow horizontal label">
+						中
+						</span>
+						<#else>
+						<span class="ui green horizontal label">
+						低
+						</span>
+						</#if>
 					</p>
 				</div>
 				<div class="ui segment">
 					<p>
-						<b>影响程度：</b><span class="ui red horizontal label">高</span>
+						<b>影响程度：</b>
+						<#if t.effect==0>
+						<span class="ui red horizontal label">
+						高
+						</span>
+						<#elseif t.effect==1>
+						<span class="ui yellow horizontal label">
+						中
+						</span>
+						<#else>
+						<span class="ui green horizontal label">
+						低
+						</span>
+						</#if>
 					</p>
 				</div>
 				<div class="ui segment">
 					<p>
-						<b>提交者：</b><span class="ui basic label">开发者<span
-							class="detail">薛家豪</span></span>
+						<b>提交者：</b>
+						<span class="ui basic label">
+							开发者
+							<span class="detail">薛家豪</span>
+						</span>
 					</p>
 				</div>
 			</div>
 			<div class="ui segment">
 				<h4 class="ui header">风险描述：</h4>
 				<p>
-					内容在这里<br>我不知道会发生什么<br>或许很可怕
+					${((t.content)?length>0)?string(t.content,"暂无描述")}
 				</p>
 			</div>
-		</div>
-
-		<div class="ui segments">
 			<div class="ui horizontal segments">
 				<div class="ui segment">
 					<p>
-						<b>监测项：</b><span class="ui teal label">项目规模</span>
+						<b>监测项：</b><span class="ui teal label">${t.spy}</span>
 					</p>
 				</div>
 				<div class="ui segment">
 					<p>
-						<b>触发器/阈值：</b><span class="ui teal label">超过1G</span>
+						<b>触发器/阈值：</b><span class="ui teal label">${t.switcher}</span>
 					</p>
 				</div>
 				<div class="ui segment">
 					<p>
-						<b>追踪者：</b><span class="ui basic label">开发者<span
-							class="detail">薛家豪</span></span>
+						<b>追踪者：</b>
+						<span class="ui basic label">
+						${((t.trailer)?length>0)?string(t.trailer,"暂无")}
+						<!-- <span class="detail">xxx</span> -->
+						</span>
 					</p>
 				</div>
 			</div>
 			<div class="ui segment">
 				<h4 class="ui header">应对措施：</h4>
 				<p>
-					内容在这里<br>我不知道会发生什么<br>或许很可怕
+					${t.handle}
 				</p>
 			</div>
 		</div>
+
 
 		<div class="ui segments">
 			<div class="ui segment">
@@ -132,7 +180,7 @@
 
 	</div>
   </a>
-  
+  </#list>
   
   
     <a class="add item">
@@ -342,7 +390,6 @@
 		<script >
 		if(!"${role!''}"){
 			var role=$('.role.modal');
-//	    	role.modal({});
 	    	role.modal('setting', 'closable', false).modal('show');
 	        role.find('input').keypress(function (e){
 	        	if(e.keyCode==13 && $(this).val()!='') {
@@ -362,7 +409,7 @@
 	    	role.find('.teal.button').click(function() {
 	    		role.find('.ui.dimmer').dimmer('show');
 	            $.ajax({
-	                url: '/addRole',
+	                url: '/RMS/addRole',
 	                type: 'post',
 	                dataType:'json',
 	                data: "role="+role.find('input').val()+"&pid=${project.id}",
