@@ -3,6 +3,7 @@ package rms.controller;
 import java.util.regex.Pattern;
 
 import rms.model.User;
+import rms.config.ReturnConstants;
 import rms.interceptor.IndexInterceptor;
 import rms.interceptor.LoginInterceptor;
 import rms.services.*;
@@ -36,7 +37,7 @@ public class MainController extends Controller {
 	    String password = getPara("password");
 
 	    UserVO result = userManageservice.login(account, password);
-	    setAttr("result", result.getLoginResultInfo());
+		setAttr(ReturnConstants.result.toString(), result.getLoginResultInfo());
 	    setLogin(result);
 		renderJson();
 	}
@@ -49,7 +50,7 @@ public class MainController extends Controller {
 	    String password2 = getPara("password2");
 
 	    UserVO result = userManageservice.register(account, password, password2);
-	    setAttr("result", result.getLoginResultInfo());
+	    setAttr(ReturnConstants.result.toString(), result.getLoginResultInfo());
 	    setLogin(result);
 
 		renderJson();
@@ -70,6 +71,7 @@ public class MainController extends Controller {
 				return user.getId();
 			}
 		} catch (NullPointerException e) {
+			System.err.println("no log before");
 			return -1;
 		}
     }
@@ -90,7 +92,7 @@ public class MainController extends Controller {
 	    String name = getPara("name");
 	    String desc = getPara("desc");
 	    BaseResult result = projectManageservice.addProject(name, desc);
-	    setAttr("result", result.getInfo());
+	    setAttr(ReturnConstants.result.toString(), result.getInfo());
 
 	    renderJson();
     }
@@ -98,7 +100,7 @@ public class MainController extends Controller {
     public void deleteProject() {
     	int id = getParaToInt("id");
     	BaseResult result = projectManageservice.deleteProject(id);
-    	setAttr("result", result.getInfo());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
     }
@@ -115,7 +117,7 @@ public class MainController extends Controller {
     		result = roleManageservice.modifyRole(rid, role);
 		}
     	
-    	setAttr("result", result.getInfo());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
     }
@@ -154,7 +156,7 @@ setLogin(result);
     	String role = getPara("role");
     	
     	BaseResult result = roleManageservice.addRole(uid,pid,role);
-    	setAttr("result", result.getInfo());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
     }
@@ -174,7 +176,7 @@ setLogin(result);
     	int uid=getLoginId();
 
     	BaseResult result = projectManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
-    	setAttr("result", result.getInfo());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
     }

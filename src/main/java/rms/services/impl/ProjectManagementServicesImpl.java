@@ -3,6 +3,7 @@ package rms.services.impl;
 import java.util.List;
 
 import com.jfinal.aop.Before;
+import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import rms.model.Project;
@@ -15,7 +16,7 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 	
 	@Override
 	public BaseResult addProject(String name, String desc) {
-		if (!name.equals("")&&name!=null) {
+		if (name!=null&&!name.equals("")) {
 			if (Project.dao.add(name, desc)) {
 				return BaseResult.SUCCESS;
 			}
@@ -30,7 +31,7 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 
 	@Override
 	public BaseResult modifyProject(int id, String name, String desc) {
-		if (!name.equals("")&&name!=null) {
+		if (name!=null&&!name.equals("")) {
 			if (Project.dao.modify(id, name, desc)) {
 				return BaseResult.SUCCESS;
 			}
@@ -49,7 +50,7 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 			new Project().deleteById(id);
 			return BaseResult.SUCCESS;
 		} catch (Exception e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 		return BaseResult.UNEXPECTED_ERROR;
 	}
