@@ -7,17 +7,17 @@ import rms.model.Project;
 public class ProjectVO {
 
 	private Project project;
-	private List<Risk> risks;
+	private List<RiskVO> risks;
 	public Project getProject() {
 		return project;
 	}
 	public void setProject(Project project) {
 		this.project = project;
 	}
-	public List<Risk> getRisks() {
+	public List<RiskVO> getRisks() {
 		return risks;
 	}
-	public void setRisks(List<Risk> risks) {
+	public void setRisks(List<RiskVO> risks) {
 		this.risks = risks;
 	}
 	public boolean isValid() {

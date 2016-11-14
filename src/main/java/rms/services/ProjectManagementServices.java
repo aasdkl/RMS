@@ -18,5 +18,7 @@ public interface ProjectManagementServices {
 	public BaseResult addRisk(int uid, int pid, int state, String name,
 			int possibility, int damage, String desc, String spy,
 			String trigger, String trailer, String plan);
+	
+	public BaseResult addTrail(int id, String desc, int state, int loginId);
 
 }

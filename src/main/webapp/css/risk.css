@@ -33,11 +33,17 @@ h1 .ui.setting.icon {
 	transform: inherit;
 }
 
-.ui.segments>.ui.horizontal.segments{
-	background-color:white;
+.ui.accordion.menu .label{
+	vertical-align:20%!important;
 }
 
-.ui.segments {
+
+.ui.accordion.menu .content>.ui.segment {
+	border: 0;
+	padding: 0 !important;
+}
+
+.ui.accordion.menu .content>table.ui thead{
 	cursor: default;
 }
 
@@ -46,4 +52,11 @@ h1 .ui.setting.icon {
 }
 .addRisk.modal .header .dropdown .label{
 	margin:0 !important;
+}
+
+pre{
+	margin:1em;
+}
+.clearing.hidden.divider{
+	margin:0;
 }

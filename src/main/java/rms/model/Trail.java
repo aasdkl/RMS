@@ -18,4 +18,8 @@ import rms.model.base.BaseTrail;
 @SuppressWarnings("serial")
 public class Trail extends BaseTrail<Trail> {
 	public static final Trail dao = new Trail();
+
+	public boolean add(int id, String desc, int state, int loginId) {
+		return new Trail().set("risk", id).set("state", state).set("content", desc).set("trailer", loginId).save();
+	}
 }

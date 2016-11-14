@@ -123,10 +123,10 @@ public class MainController extends Controller {
     }
     
     // -----------------------------risk--------------------------
-@Clear
+//@Clear
     public void risk() {
-UserVO result = userManageservice.login("qwe", "qwe");
-setLogin(result);
+//UserVO result = userManageservice.login("qwe", "qwe");
+//setLogin(result);
     	String id = getPara();
     	if (id==null||id.isEmpty()||!isInteger(id)) {
 			redirect("/");
@@ -179,6 +179,26 @@ setLogin(result);
     	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
+    }
+    
+    public void deleteRisk() {
+    	int id=getParaToInt("id");
+    	BaseResult result = riskManageservice.deleteRisk(id);
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	
+    	renderJson();
+
+	}
+    
+    public void addTrail() {
+    	int id=getParaToInt("id");
+    	String desc=getPara("desc");
+    	int state=getParaToInt("state");
+    	
+    	BaseResult result = projectManageservice.addTrail(id,desc,state,getLoginId());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	renderJson();
+    	
     }
     
 }

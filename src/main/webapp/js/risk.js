@@ -7,6 +7,46 @@
 	var modifyModal = $('.modify.modal');
 	var confirmModal = $('.confirm.modal');
 	var addRiskModal = $('.addRisk.modal');
+	var trailModal = $('.trailRisk.modal');
+	
+	$('.trail.right.button').click(function(){
+		trailModal.data('id', $(this).parent().parent().data('id'));
+		trailModal.find('.content p').html($(this).parent().find('.header').html());
+    	trailModal.modal('show');
+	});
+	trailModal.find('.no.button').click(function(){
+    	trailModal.modal('hide');
+	});
+	trailModal.find('.yes.button').click(function(){
+		$.ajax({
+			url: '/RMS/addTrail',
+			type: 'post',
+			dataType:'json',
+			data: "id="+trailModal.data('id')+"&desc="+trailModal.find('input').val()+"&state="+trailModal.find('.dropdown').data('value'),
+			success: function(msg) {
+				if(msg.result!="成功"){
+					alert('出错');
+				}
+				window.location.reload();
+			}
+		});
+	});
+	
+	$('.deleteRisk.button').click(function(){
+        $.ajax({
+            url: '/RMS/deleteRisk',
+            type: 'post',
+            dataType:'json',
+            data: "id="+$(this).parent().parent().data('id'),
+            success: function(msg) {
+                if(msg.result!="成功"){
+                	alert('出错');
+                }
+                window.location.reload();
+            }
+        });
+	});
+	
 	
 	$('h1').click(function(){
     	modifyModal.modal('show');
@@ -76,9 +116,9 @@
     	}
     })
     
-    $('.accordion.menu .ui.segments').hover(
-       function(){ $(this).addClass('raised'); },
-       function(){ $(this).removeClass('raised'); }
+    $('.accordion.menu .content .celled.table').hover(
+       function(){ $(this).parent().addClass('raised'); },
+       function(){ $(this).parent().removeClass('raised'); }
     )
     
     
@@ -112,6 +152,16 @@
 	    	$(this).addClass(choose[value]);
 	   	}
     });
+    
+    trailModal.find('.ui.dropdown').dropdown({
+    	onChange:function(value,text){
+	    	$(this).removeClass(colors1.join(' '));
+	    	$(this).addClass(colors1[value]);
+	   	}
+    });
+
+    
+    
     addRiskModal.find('.no.button').click(function(){
     	addRiskModal.modal('hide');
     })

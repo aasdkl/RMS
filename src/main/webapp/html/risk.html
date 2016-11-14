@@ -10,7 +10,6 @@
 		<title>风险列表</title>
 
 		<base href="/RMS/" />
-
 		<link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
 		<link rel="stylesheet" type="text/css" href="css/risk.css">
 	</head>
@@ -53,130 +52,144 @@
 <div class="ui massive accordion vertical fluid menu">
 
 					<#list risk as t>
-  <a class="item">
+  <a class="item" data-id="${t.risk.id}">
     <div class="title">
       <i class="dropdown icon"></i>
-      
-      <#if t.state==0>
-      <div class="ui yellow horizontal label">
+      <#if t.risk.state==0>
+      <div class="ui yellow label">
       		未发生
       </div>
- 	  <#elseif t.state==1>
-      <div class="ui red horizontal label">
+ 	  <#elseif t.risk.state==1>
+      <div class="ui red label">
       		已发生
       </div>
 	  <#else>
-      <div class="ui green horizontal label">
+      <div class="ui green label">
       		已消除
       </div>
 	  </#if>
       
-      
-      <b>${t.title}</b>
+      <span class="ui small header">
+     ${t.risk.title}</span>
+     
+     <div class="ui green trail mini right floated button">追踪</div>
+     <div class="ui red deleteRisk mini right floated button">删除</div>
+     <div class="ui clearing hidden divider"></div>
     </div>
     <div class="content">
-
-		<div class="ui segments">
-			<div class="ui horizontal segments">
-				<div class="ui segment">
-					<p>
-						<b>可能性：</b>
-						<#if t.probability==0>
-						<span class="ui red horizontal label">
+    			<div class="ui segment">
+    
+		<table class="ui fixed celled table">
+		<tr>
+		<td>
+								<span class="ui small header">可能性：</span>
+						<#if t.risk.probability==0>
+						<span class="ui  red  label">
 						高
 						</span>
-						<#elseif t.probability==1>
-						<span class="ui yellow horizontal label">
+						<#elseif t.risk.probability==1>
+						<span class="ui  yellow  label">
 						中
 						</span>
 						<#else>
-						<span class="ui green horizontal label">
+						<span class="ui  green  label">
 						低
 						</span>
 						</#if>
-					</p>
-				</div>
-				<div class="ui segment">
-					<p>
-						<b>影响程度：</b>
-						<#if t.effect==0>
-						<span class="ui red horizontal label">
+		
+		</td>
+		<td>
+								<span class="ui small header">影响程度：</span>
+						<#if t.risk.effect==0>
+						<span class="ui  red  label">
 						高
 						</span>
-						<#elseif t.effect==1>
-						<span class="ui yellow horizontal label">
+						<#elseif t.risk.effect==1>
+						<span class="ui  yellow  label">
 						中
 						</span>
 						<#else>
-						<span class="ui green horizontal label">
+						<span class="ui  green  label">
 						低
 						</span>
 						</#if>
-					</p>
-				</div>
-				<div class="ui segment">
-					<p>
-						<b>提交者：</b>
-						<span class="ui basic label">
-							开发者
-							<span class="detail">薛家豪</span>
+		
+		</td>
+		<td>						<span class="ui small header">提交者：</span>
+						<span class="ui  basic label">
+							${t.role}
+							<span class="detail">${t.publisher}</span>
 						</span>
-					</p>
-				</div>
-			</div>
-			<div class="ui segment">
-				<h4 class="ui header">风险描述：</h4>
-				<p>
-					${((t.content)?length>0)?string(t.content,"暂无描述")}
-				</p>
-			</div>
-			<div class="ui horizontal segments">
-				<div class="ui segment">
-					<p>
-						<b>监测项：</b><span class="ui teal label">${t.spy}</span>
-					</p>
-				</div>
-				<div class="ui segment">
-					<p>
-						<b>触发器/阈值：</b><span class="ui teal label">${t.switcher}</span>
-					</p>
-				</div>
-				<div class="ui segment">
-					<p>
-						<b>追踪者：</b>
+		</td>
+		</tr>
+		<tr>
+			<td colspan="3" >
+				<div class="ui small header">风险描述：</div>
+				<pre>${((t.risk.content)?length>0)?string(t.risk.content,"暂无描述")}</pre>
+			</td>
+		</tr>
+		<tr>
+		<td>
+								<span class="ui small header">监测项：</span><span class="ui teal label">${t.risk.spy}</span>
+		</td>
+		<td>
+								<span class="ui small header">触发器/阈值：</span><span class="ui teal label">${t.risk.switcher}</span>
+		
+		</td>
+		<td>
+								<span class="ui small header">追踪者：</span>
 						<span class="ui basic label">
-						${((t.trailer)?length>0)?string(t.trailer,"暂无")}
+						${((t.risk.trailer)?length>0)?string(t.risk.trailer,"暂无")}
 						<!-- <span class="detail">xxx</span> -->
 						</span>
-					</p>
-				</div>
-			</div>
-			<div class="ui segment">
-				<h4 class="ui header">应对措施：</h4>
-				<p>
-					${t.handle}
-				</p>
-			</div>
-		</div>
+		
+		</td>
+		</tr>
+		<tr>
+			<td colspan="3" >
+				<div class="ui small header">应对措施：</div>
+				<pre>${t.risk.handle}</pre>
+			</td>
+		</tr>
+		</table>
+</div>
 
 
-		<div class="ui segments">
+
+
+
 			<div class="ui segment">
-				<h4 class="ui header">追踪记录：</h4>
-				<table
-					class="ui very basic striped selectable fixed single line table">
+				<table class="ui basic striped selectable table">
+				<thead>
+				<tr >
+				<th colspan="3">
+				<div class="ui small header">追踪记录：</div>
+			    </th>
+				</tr>
+				</thead>
 					<tbody>
+						<#list t.trails as tt>
 						<tr>
-							<td class="two wide"><b>#22</b>&nbsp;
-								<div class="ui red horizontal label">已发生</div></td>
-							<td class="ten wide">忽然间发生了变故，导致了问题，看来不得不采用计划A了啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</td>
-							<td class="four wide"><span class="ui basic label">薛家豪<span
-									class="detail">2013-02-13 09:00</span></span></td>
+							<td class="collapsing"><b>#${(t.trails?size)-tt_index}</b>&nbsp;
+								      <#if tt.state==0>
+								<div class="ui yellow horizontal label">未发生</div>
+								 	  <#elseif tt.state==1>
+								<div class="ui red horizontal label">已发生</div>
+									  <#else>
+								<div class="ui green horizontal label">已消除</div>
+									  </#if>
+								
+								
+								
+								</td>
+							<td>${tt.content}</td>
+							<td class="right aligned collapsing"><span class="ui basic label">薛家豪<span
+									class="detail">${tt.time}</span></span></td>
 						</tr>
+						</#list>
 					</tbody>
 				</table>
 			</div>
-		</div>
 
 	</div>
   </a>
@@ -378,6 +391,38 @@
       </div>
       <div class="ui teal disabled icon button">
        确认角色
+      </div>
+    </div>
+  </div>
+
+<div class="ui small trailRisk modal">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">提交中</div>
+	</div>
+    <div class="header">
+		追踪
+    </div>
+    <div class="content">
+      <p></p>
+      <div class="ui divider"></div>
+<div class="ui yellow floating dropdown button" data-value="0">
+  <div class="text">未发生</div>
+  <div class="menu">
+      <div class="item" data-value="0" data-text="未发生"><div class="ui yellow label">未发生</div></div>
+      <div class="item" data-value="1" data-text="已发生"><div class="ui red label">已发生</div></div>
+      <div class="item" data-value="2" data-text="已消除"><div class="ui green label">已消除</div></div>
+  </div>
+</div>
+		<div class="ui input">
+			<input type="text" name="desc" placeholder="追踪描述" />
+		</div>
+    </div>
+    <div class="actions">
+      <div class="ui no button">
+       返回
+      </div>
+      <div class="ui teal yes button">
+       提交
       </div>
     </div>
   </div>

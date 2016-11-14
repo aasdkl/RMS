@@ -45,4 +45,12 @@ public class RiskManagementServicesImpl implements RiskManagementServices{
 		return map;
 	}
 
+	@Override
+	public BaseResult deleteRisk(int id) {
+		if (new Risk().deleteById(id)) {
+			return BaseResult.SUCCESS;
+		}
+		return BaseResult.UNEXPECTED_ERROR;
+	}
+
 }

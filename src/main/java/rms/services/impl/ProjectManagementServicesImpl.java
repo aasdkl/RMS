@@ -1,5 +1,9 @@
 package rms.services.impl;
 
+import java.beans.Transient;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.jfinal.aop.Before;
@@ -8,8 +12,12 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 
 import rms.model.Project;
 import rms.model.Risk;
+import rms.model.Trail;
+import rms.model.User;
+import rms.model.Role;
 import rms.services.ProjectManagementServices;
 import rms.vo.ProjectVO;
+import rms.vo.RiskVO;
 import rms.vo.constant.BaseResult;
 
 public class ProjectManagementServicesImpl implements ProjectManagementServices{
@@ -61,7 +69,21 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 		ProjectVO vo = new ProjectVO();
 		Project project = Project.dao.findById(projectId);
 		vo.setProject(project);
-		vo.setRisks(project.getRisks());
+		
+		List<RiskVO> rvo = new ArrayList<RiskVO>();
+		List<Risk> risks = project.getRisks();
+		List<Trail> trails;
+		User u;
+		Role r;
+		for (Risk risk : risks) {
+			u = User.dao.findById(risk.getPublisher());
+			r = Role.dao.find(u.getId(), projectId);
+			trails = Trail.dao.find("select * from trail where risk=?",risk.getId());
+			trails = Trail.dao.find("select * from trail where risk=?",risk.getId());
+			Collections.reverse(trails);
+			rvo.add(new RiskVO(u.getName(), r.getRole(), risk, trails));
+		}
+		vo.setRisks(rvo);
 		return vo;
 	}
 
@@ -79,6 +101,20 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 			}
 		}
 		
+		return BaseResult.UNEXPECTED_ERROR;
+	}
+
+	@Override
+	@Before(Tx.class)
+	public BaseResult addTrail(int id, String desc, int state, int loginId) {
+    	try {
+    		new Trail().add(id,desc,state,loginId);
+    		new Risk().findById(id).set("state",state).update();
+    		
+			return BaseResult.SUCCESS;
+		} catch (Exception e) {
+			System.err.println(e);
+		}
 		return BaseResult.UNEXPECTED_ERROR;
 	}
 
