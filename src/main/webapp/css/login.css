@@ -14,3 +14,6 @@ body > .grid {
 .ui.shape{
 	width:100%;
 }
+a{
+	cursor:pointer;
+}

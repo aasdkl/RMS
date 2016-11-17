@@ -1,5 +1,6 @@
 package rms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import rms.model.Project;
@@ -17,8 +18,12 @@ public interface ProjectManagementServices {
 	// risks
 	public BaseResult addRisk(int uid, int pid, int state, String name,
 			int possibility, int damage, String desc, String spy,
+			String trigger, String trailer, String plan, int lid);
+	public BaseResult modifyRisk(int rid, int state, String name,
+			int possibility, int damage, String desc, String spy,
 			String trigger, String trailer, String plan);
 	
 	public BaseResult addTrail(int id, String desc, int state, int loginId);
+	public Date getOldestDate();
 
 }

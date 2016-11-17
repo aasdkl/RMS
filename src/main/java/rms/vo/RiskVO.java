@@ -11,13 +11,29 @@ public class RiskVO {
 	private String publisher;
 	private String role;
 	private Risk risk;
-	private List<Trail> trails;
+	private List<Risk> links;
+	private List<Trail> linkErrorTrails;
+	private List<TrailVO> trails;
 	
-	public RiskVO(String publisher, String role, Risk risk, List<Trail> trails) {
+	public RiskVO(String publisher, String role, Risk risk, List<TrailVO> trails,List<Risk> links, List<Trail> linkErrorTrails) {
 		this.publisher=publisher;
 		this.role=role;
 		this.risk=risk;
 		this.trails=trails;
+		this.links = links;
+		this.linkErrorTrails = linkErrorTrails;
+	}
+	public List<Trail> getLinkErrorTrails() {
+		return linkErrorTrails;
+	}
+	public void setLinkErrorTrails(List<Trail> linkErrorTrails) {
+		this.linkErrorTrails = linkErrorTrails;
+	}
+	public List<Risk> getLinks() {
+		return links;
+	}
+	public void setLinks(List<Risk> links) {
+		this.links = links;
 	}
 	public String getPublisher() {
 		return publisher;
@@ -32,13 +48,13 @@ public class RiskVO {
 	public Risk getRisk() {
 		return risk;
 	}
-	public List<Trail> getTrails() {
+	public List<TrailVO> getTrails() {
 		return trails;
 	}
 	public void setRisk(Risk risk) {
 		this.risk = risk;
 	}
-	public void setTrails(List<Trail> trails) {
+	public void setTrails(List<TrailVO> trails) {
 		this.trails = trails;
 	}
 

@@ -32,6 +32,8 @@
 				    </div>
 				</div>
 
+				<a class="item" href="/RMS/statistic"><i class="signal icon"></i>风险统计</a>
+
 				<a class="item" href="/RMS/logout"><i class="sign out icon"></i>退出账户</a>
 
 			</div>
@@ -40,31 +42,57 @@
 				<div class="two wide column"></div>
 				<div class="fourteen wide column">
 
-					<div class="ui vertical segment">
+					<div class="ui clearing vertical segment">
 						<div class="ui container">
-							<h1 class="ui header">
+<div class="ui right floated segment" style="margin:0;margin-top:-.5em;padding-bottom:.5em;">
+<i class="filter icon"></i>
+<div class="ui transparent input">
+  <input class="filter" type="text" placeholder="筛选起始时间" data-default='${oldDate?string("yyyy-MM-dd")}' value='${oldDate?string("yyyy-MM-dd")}' style="text-align:center;max-width:7em;font-weight: bold;">
+</div>
+    到
+<div class="ui transparent input">
+  <input class="filter" type="text" placeholder="筛选终止时间" data-default='${.now?string("yyyy-MM-dd")}' value='${.now?string("yyyy-MM-dd")}' style="text-align:center;max-width:7em;font-weight: bold">
+</div>
+中&nbsp;&nbsp;&nbsp;
+<div class="ui inline dropdown" data-value='0'>
+      <div class="text">所有的</div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="active item" data-value='0' data-text="所有的">所有的</div>
+        <div class="item" data-value='1' data-text="被识别最多的">被识别最多的</div>
+        <div class="item" data-value='2' data-text="演变成问题最多的">演变成问题最多的</div>
+      </div>
+</div>
+风险【共 <b><span id="count">${risk?size}</span></b> 条】
+     <div class="ui mini reset teal button" style="margin-top: -.5em;">重置</div>
+</div>
+						
+							<h1 class="ui header" style="margin:0">
 							风险条目 - ${project.name}
 							<i class="ui setting icon"></i>
 							</h1>
+
+
 						</div>
 					</div>
 
 <div class="ui massive accordion vertical fluid menu">
 
 					<#list risk as t>
-  <a class="item" data-id="${t.risk.id}">
+  <a class="item" data-id="${t.risk.id}" data-lid="${t.risk.baseRisk}" >
     <div class="title">
       <i class="dropdown icon"></i>
-      <#if t.risk.state==0>
-      <div class="ui yellow label">
+      
+        <#if t.risk.state==0>
+      <div class="ui yellow label" data-value="0">
       		未发生
       </div>
  	  <#elseif t.risk.state==1>
-      <div class="ui red label">
+      <div class="ui red label" data-value="1">
       		已发生
       </div>
 	  <#else>
-      <div class="ui green label">
+      <div class="ui green label" data-value="2">
       		已消除
       </div>
 	  </#if>
@@ -72,27 +100,35 @@
       <span class="ui small header">
      ${t.risk.title}</span>
      
-     <div class="ui green trail mini right floated button">追踪</div>
      <div class="ui red deleteRisk mini right floated button">删除</div>
+     <div class="ui green trail mini right floated button">追踪</div>
+
+
+     <h4 class="ui right floated time header">${t.risk.time}</h4>
+	 <h4 class="ui right floated comment header"></h4>
+	 
      <div class="ui clearing hidden divider"></div>
     </div>
     <div class="content">
     			<div class="ui segment">
+    
+    <textarea class="hidden risks"><#list t.links as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
+    <textarea class="hidden trails"><#list t.linkErrorTrails as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
     
 		<table class="ui fixed celled table">
 		<tr>
 		<td>
 								<span class="ui small header">可能性：</span>
 						<#if t.risk.probability==0>
-						<span class="ui  red  label">
+						<span class="ui  red  label" data-value="0">
 						高
 						</span>
 						<#elseif t.risk.probability==1>
-						<span class="ui  yellow  label">
+						<span class="ui  yellow  label" data-value="1">
 						中
 						</span>
 						<#else>
-						<span class="ui  green  label">
+						<span class="ui  green  label" data-value="2">
 						低
 						</span>
 						</#if>
@@ -101,15 +137,15 @@
 		<td>
 								<span class="ui small header">影响程度：</span>
 						<#if t.risk.effect==0>
-						<span class="ui  red  label">
+						<span class="ui  red  label" data-value="0">
 						高
 						</span>
 						<#elseif t.risk.effect==1>
-						<span class="ui  yellow  label">
+						<span class="ui  yellow  label" data-value="1">
 						中
 						</span>
 						<#else>
-						<span class="ui  green  label">
+						<span class="ui  green  label" data-value="2">
 						低
 						</span>
 						</#if>
@@ -140,7 +176,6 @@
 								<span class="ui small header">追踪者：</span>
 						<span class="ui basic label">
 						${((t.risk.trailer)?length>0)?string(t.risk.trailer,"暂无")}
-						<!-- <span class="detail">xxx</span> -->
 						</span>
 		
 		</td>
@@ -171,9 +206,9 @@
 						<#list t.trails as tt>
 						<tr>
 							<td class="collapsing"><b>#${(t.trails?size)-tt_index}</b>&nbsp;
-								      <#if tt.state==0>
+								      <#if tt.trail.state==0>
 								<div class="ui yellow horizontal label">未发生</div>
-								 	  <#elseif tt.state==1>
+								 	  <#elseif tt.trail.state==1>
 								<div class="ui red horizontal label">已发生</div>
 									  <#else>
 								<div class="ui green horizontal label">已消除</div>
@@ -182,9 +217,9 @@
 								
 								
 								</td>
-							<td>${tt.content}</td>
-							<td class="right aligned collapsing"><span class="ui basic label">薛家豪<span
-									class="detail">${tt.time}</span></span></td>
+							<td>${tt.trail.content}</td>
+							<td class="right aligned collapsing"><span class="ui basic label">${tt.user}<span
+									class="detail">${tt.trail.time}</span></span></td>
 						</tr>
 						</#list>
 					</tbody>
@@ -212,12 +247,137 @@
 
 
 
-<div class="ui addRisk modal" data-id="${project.id}">
+<div class="ui addRisk modal" data-id="${project.id}"  data-lid="0">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
     <div class="header">
       新增一条风险
+    </div>
+    <div class="content">
+      <form class="ui form" method="post">
+        <div class="ui dividing header">
+        
+<div class="ui big transparent fluid required input">
+
+<div class="ui yellow floating dropdown button" data-value="0">
+  <div class="text">未发生</div>
+  <div class="menu">
+      <div class="item" data-value="0" data-text="未发生"><div class="ui yellow label">未发生</div></div>
+      <div class="item" data-value="1" data-text="已发生"><div class="ui red label">已发生</div></div>
+      <div class="item" data-value="2" data-text="已消除"><div class="ui green label">已消除</div></div>
+  </div>
+</div>
+
+  <input type="text" name="name" placeholder="风险名称">
+  
+
+<div class="ui left labeled button" tabindex="0">
+  <a class="ui basic red label">
+    可能性
+  </a>
+  <div class="ui red right floating dropdown button" data-value="0">
+    <div class="text">高</div>
+    <div class="menu">
+        <div class="item" data-value="0" data-text="高"><div class="ui red label">高</div></div>
+        <div class="item" data-value="1" data-text="中"><div class="ui yellow label">中</div></div>
+        <div class="item" data-value="2" data-text="低"><div class="ui green label">低</div></div>
+    </div>
+  </div>
+</div>
+<div class="ui left labeled button" tabindex="0">
+  <a class="ui basic red label">
+    影响程度
+  </a>
+  <div class="ui red right floating dropdown button" data-value="0">
+    <div class="text">高</div>
+    <div class="menu">
+        <div class="item" data-value="0" data-text="高"><div class="ui red label">高</div></div>
+        <div class="item" data-value="1" data-text="中"><div class="ui yellow label">中</div></div>
+        <div class="item" data-value="2" data-text="低"><div class="ui green label">低</div></div>
+    </div>
+  </div>
+</div>
+  
+</div>
+		</div>
+		
+<#if ((recommands?size)>0)>
+<div class="ui message transition ">
+  <i class="close icon"></i>
+  <div class="header">
+	  你或许想要添加：
+  </div>
+  <ul class="list">
+<#list recommands as t>
+    <li 
+    data-id="${t.id}" 
+    data-probability="${t.probability}" 
+    data-effect="${t.effect}"
+    data-spy="${t.spy?html}"
+    data-content="${t.content?html}"
+    data-switcher="${t.switcher?html}"
+    data-handle="${t.handle?html}"
+    >${t.title}</li>
+</#list>
+  </ul>
+</div>
+</#if>
+		
+		
+        <div class="field">
+	        	        	<label> 风险描述 </label>
+          <textarea name="desc" placeholder="风险描述（可不填）"></textarea>
+        </div>
+        
+        <div class="ui divider"></div>
+        <div class="three fields">
+	        <div class="required field">
+	        	        	<label> 监测项 </label>
+        	<div class="ui input">
+				<input type="text" name="spy" placeholder="所要监测的事项"/>
+			</div>
+	        	
+	        </div>
+	        <div class="required field">
+	        	        	<label> 触发器/阈值 </label>
+        	<div class="ui input">
+				<input type="text" name="trigger" placeholder="何时采用措施"/>
+			</div>
+	        	
+	        </div>
+	        <div class="field">
+	        	        	<label> 追踪者 </label>
+        	<div class="ui input">
+				<input type="text" name="trailer" placeholder="第一监测人"/>
+			</div>
+	        	
+	        </div>
+        </div>
+        
+        		
+        <div class="required field">
+	        	        	<label> 应对措施 </label>
+          <textarea name="desc" placeholder="应对措施"></textarea>
+        </div>
+        
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui no button">取消</div>
+      <div class="ui yes disabled submit green button">新增</div>
+    </div>
+</div>
+
+
+
+
+<div class="ui modifyRisk modal" data-id="" data-lid="0">
+	<div class="ui inverted dimmer">
+	    <div class="ui text loader">提交中</div>
+	</div>
+    <div class="header">
+      修改风险
     </div>
     <div class="content">
       <form class="ui form" method="post">
@@ -306,12 +466,9 @@
     </div>
     <div class="actions">
       <div class="ui no button">取消</div>
-      <div class="ui yes disabled submit green button">新增</div>
+      <div class="ui yes submit green button">提交</div>
     </div>
 </div>
-
-
-
 
 
 

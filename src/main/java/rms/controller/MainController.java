@@ -123,10 +123,7 @@ public class MainController extends Controller {
     }
     
     // -----------------------------risk--------------------------
-//@Clear
     public void risk() {
-//UserVO result = userManageservice.login("qwe", "qwe");
-//setLogin(result);
     	String id = getPara();
     	if (id==null||id.isEmpty()||!isInteger(id)) {
 			redirect("/");
@@ -140,6 +137,8 @@ public class MainController extends Controller {
 		setAttr("projects", projectManageservice.getProjects());
 		setAttr("project", project.getProject());
 		setAttr("risk", project.getRisks());
+		setAttr("oldDate", project.getOldestDate());
+		setAttr("recommands", project.getRecommand());
 		setAttr("role", roleManageservice.getRole(getLoginId(), project.getProject().getId()));
 		render("risk.html");
 		
@@ -161,8 +160,8 @@ public class MainController extends Controller {
     	renderJson();
     }
     
-    
     public void addRisk() {
+    	int lid=getParaToInt("lid");
     	int state=getParaToInt("state");
     	String name=getPara("name");
     	int possibility=getParaToInt("possibility");
@@ -175,7 +174,24 @@ public class MainController extends Controller {
     	int pid=getParaToInt("pid");
     	int uid=getLoginId();
 
-    	BaseResult result = projectManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
+    	BaseResult result = projectManageservice.addRisk(uid,pid,state,name,possibility,damage,desc,spy,trigger,trailer,plan,lid);
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	
+    	renderJson();
+    }
+    public void modifyRisk() {
+    	int rid=getParaToInt("rid");
+    	int state=getParaToInt("state");
+    	String name=getPara("name");
+    	int possibility=getParaToInt("possibility");
+    	int damage=getParaToInt("damage");
+    	String desc=getPara("desc");
+    	String spy=getPara("spy");
+    	String trigger=getPara("trigger");
+    	String trailer=getPara("trailer");
+    	String plan=getPara("plan");
+    	
+    	BaseResult result = projectManageservice.modifyRisk(rid,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
     	setAttr(ReturnConstants.result.toString(), result.getInfo());
     	
     	renderJson();
@@ -200,5 +216,23 @@ public class MainController extends Controller {
     	renderJson();
     	
     }
+    
+    // -----------------------------statistic--------------------------
+@Clear
+    public void statistic() {
+UserVO result = userManageservice.login("qwe", "qwe");
+setLogin(result);
+
+		setAttr("trail", riskManageservice.getAllError());
+		setAttr("risk", riskManageservice.getAll());
+
+		setAttr("oldestDate", projectManageservice.getOldestDate());
+		setAttr("projects", projectManageservice.getProjects());
+		render("statistic.html");
+
+    }
+
+    
+    
     
 }

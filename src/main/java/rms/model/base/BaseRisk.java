@@ -120,5 +120,21 @@ public abstract class BaseRisk<M extends BaseRisk<M>> extends Model<M> implement
 	public java.lang.Integer getProject() {
 		return get("project");
 	}
+	
+	public void setBaseRisk(java.lang.Integer baseRisk) {
+		set("baseRisk", baseRisk);
+	}
+
+	public java.lang.Integer getBaseRisk() {
+		return get("baseRisk");
+	}
+
+	public void setTime(java.util.Date time) {
+		set("time", time);
+	}
+
+	public java.util.Date getTime() {
+		return get("time");
+	}
 
 }

@@ -60,3 +60,38 @@ pre{
 .clearing.hidden.divider{
 	margin:0;
 }
+li{
+	color: darkred;
+	cursor: pointer;
+}
+li:hover {
+	color: red;
+}
+li.select {
+	text-decoration: underline;
+	font-weight: bold;	
+	color: purple;
+}
+a.item>.title>.label {
+    font-size: .78571429em;
+}
+h4.time.header{
+	color:lightgray;
+	margin-top: .4em !important;
+    margin-bottom: 0;
+}
+h4.comment.header{
+	margin-top: .4em !important;
+    margin-bottom: 0;
+}
+
+.input.error input{
+	color: red !important;
+}
+.item.hidden{
+	display:none !important;
+}
+
+textarea.hidden{
+	display:none;
+}

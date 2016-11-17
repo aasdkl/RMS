@@ -1,0 +1,15 @@
+﻿body {
+    background-color: #FAFAFA;
+}
+.menu a.header {
+	color: rgba(0,0,0,.85);
+}
+.menu a.header:hover {
+	color: black;
+}
+textarea.hidden{
+	display:none;
+}
+.input.error input{
+	color: red !important;
+}

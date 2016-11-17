@@ -1,13 +1,23 @@
 package rms.vo;
 
-import java.util.List;import rms.model.Risk;
-
+import java.util.Date;
+import java.util.List;
+import rms.model.Risk;
 import rms.model.Project;
 
 public class ProjectVO {
 
 	private Project project;
+	private Date oldestDate;
 	private List<RiskVO> risks;
+	private List<Risk> recommand;
+	
+	public Date getOldestDate() {
+		return oldestDate;
+	}
+	public void setOldestDate(Date oldestDate) {
+		this.oldestDate = oldestDate;
+	}
 	public Project getProject() {
 		return project;
 	}
@@ -23,6 +33,11 @@ public class ProjectVO {
 	public boolean isValid() {
 		return project!=null;
 	}
-	
+	public List<Risk> getRecommand() {
+		return recommand;
+	}
+	public void setRecommand(List<Risk> recommand) {
+		this.recommand = recommand;
+	}
 	
 }
