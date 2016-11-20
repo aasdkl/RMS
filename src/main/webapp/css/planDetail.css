@@ -9,15 +9,15 @@
 	color: black;
 }
 
-h1:hover .ui.setting.icon {
+h1.click:hover .ui.setting.icon {
 	opacity:1;
 }
 
-h1 {
+h1.click {
 	cursor: pointer;
 }
 	
-h1 .ui.setting.icon {
+h1.click .ui.setting.icon {
 	margin-top: -.4em;
 	margin-left: .4em;
 	opacity:.4;

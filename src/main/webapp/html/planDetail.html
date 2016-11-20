@@ -7,11 +7,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 		<!-- Site Properties -->
-		<title>风险列表</title>
+		<title>风险计划管理</title>
 
 		<base href="/RMS/" />
 		<link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
-		<link rel="stylesheet" type="text/css" href="css/risk.css">
+		<link rel="stylesheet" type="text/css" href="css/planDetail.css">
 	</head>
 
 	<body>
@@ -23,15 +23,15 @@
 					<img class="ui centered mini image" src="assets/images/logo.png">
 				</a>
 
-				<div class="active item"><i class="list layout icon"></i>
+				<div class="item"><i class="list layout icon"></i>
 					<a class="header" href="/RMS/">项目列表</a>
 					<div class="menu">
 					<#list projects as t>
-				      <a class="project ${(t.id==project.id)?string('active','')} item" data-id="${t.id}">${t.name}</a>
+				      <a class="project item" data-id="${t.id}">${t.name}</a>
 				    </#list>
 				    </div>
 				</div>
-				<a class="item" href="/RMS/plan"><i class="inbox icon"></i>管理计划</a>
+				<a class="active item" href="/RMS/plan"><i class="inbox icon"></i>管理计划</a>
 
 				<a class="item" href="/RMS/statistic"><i class="signal icon"></i>风险统计</a>
 
@@ -46,23 +46,27 @@
 					<div class="ui clearing vertical segment">
 						<div class="ui container">
 						
-							<h1 class="ui header" style="margin:0">
-							风险条目 - ${project.name}
-							<i class="ui setting icon"></i>
-							</h1>
+							<#if plan??>
+								<h1 class="ui click header" style="margin:0">
+								风险计划 - ${plan.name}
+								<i class="ui setting icon"></i>
+								</h1>
+							<#else>
+								<h1 class="ui header" style="margin:0">
+								风险计划 - 所有风险
+								</h1>
+							</#if>
 
 
 						</div>
 					</div>
-
-
 
 <div class="ui clearing basic segment" style="margin:0;padding-bottom:.5em;">
 <div class="ui grid">
 <div class="three wide column">
 	<div class="ui mini teal check button" style="margin-top: -.5em;">导出</div>
 	<div class="ui mini save hidden disabled positive button" style="margin-top: -.5em;">导出 ( <span>0</span> )</div>
-	<div class="ui mini checkIn button" style="margin-top: -.5em;">导入</div>
+	<div class="ui mini single button" style="margin-top: -.5em;">隐藏引用</div>
 </div>
 <div class="three wide column">
 <div class="ui fluid left icon transparent input">
@@ -96,17 +100,15 @@
 
 
 
-
-
-<div class="ui massive accordion vertical fluid menu">
+<div class="ui massive accordion vertical fluid menu" style="margin-top:0;">
 
 					<#list risk as t>
-  <a class="item" data-id="${t.risk.id}" data-lid="${t.risk.baseRisk}" >
+  <a class="item" data-id="${t.risk.id}" data-lid="${t.risk.baseRisk}">
     <div class="title">
-    <div class="ui hidden fitted checkbox">
+    
+<div class="ui hidden fitted checkbox">
   <input type="checkbox"> <label></label>
 </div>
-    
       <i class="dropdown icon"></i>
       
         <#if t.risk.state==0>
@@ -126,9 +128,8 @@
       <span class="ui small header">
      ${t.risk.title}</span>
      
+     <#if plan??><div data-id='${plan.id}' class="ui red basic removeRisk mini right floated button">项目中移除</div></#if>
      <div class="ui red deleteRisk mini right floated button">删除</div>
-     <div class="ui green trail mini right floated button">追踪</div>
-
 
      <h4 class="ui right floated time header">${t.risk.time}</h4>
 	 <h4 class="ui right floated comment header"></h4>
@@ -137,9 +138,10 @@
     </div>
     <div class="content">
     			<div class="ui segment">
-    
-    <textarea class="hidden risks"><#list t.links as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
-    <textarea class="hidden trails"><#list t.linkErrorTrails as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
+    			
+   <textarea class="hidden risks"><#list t.links as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
+   <textarea class="hidden trails"><#list t.linkErrorTrails as tt>${tt.time?string("yyyy-MM-dd")} </#list></textarea>
+    			
     
 		<table class="ui fixed celled table">
 		<tr>
@@ -219,39 +221,6 @@
 
 
 
-			<div class="ui segment">
-				<table class="ui basic striped selectable table">
-				<thead>
-				<tr >
-				<th colspan="3">
-				<div class="ui small header">追踪记录：</div>
-			    </th>
-				</tr>
-				</thead>
-					<tbody>
-						<#list t.trails as tt>
-						<tr>
-							<td class="collapsing"><b>#${(t.trails?size)-tt_index}</b>&nbsp;
-								      <#if tt.trail.state==0>
-								<div class="ui yellow horizontal label">未发生</div>
-								 	  <#elseif tt.trail.state==1>
-								<div class="ui red horizontal label">已发生</div>
-									  <#else>
-								<div class="ui green horizontal label">已消除</div>
-									  </#if>
-								
-								
-								
-								</td>
-							<td>${tt.trail.content}</td>
-							<td class="right aligned collapsing"><span class="ui basic label">${tt.user}<span
-									class="detail">${tt.trail.time}</span></span></td>
-						</tr>
-						</#list>
-					</tbody>
-				</table>
-			</div>
-
 	</div>
   </a>
   </#list>
@@ -273,12 +242,12 @@
 
 
 
-<div class="ui addRisk modal" data-id="${project.id}"  data-lid="0">
+<div class="ui addRisk modal" data-id="<#if plan??>${plan.id}<#else>0</#if>">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
     <div class="header">
-      新增一条风险
+      新增风险
     </div>
     <div class="content">
       <form class="ui form" method="post">
@@ -328,29 +297,6 @@
 </div>
 		</div>
 		
-<#if ((recommands?size)>0)>
-<div class="ui message transition ">
-  <i class="close icon"></i>
-  <div class="header">
-	  你或许想要添加：
-  </div>
-  <ul class="list">
-<#list recommands as t>
-    <li 
-    data-id="${t.id}" 
-    data-probability="${t.probability}" 
-    data-effect="${t.effect}"
-    data-spy="${t.spy?html}"
-    data-content="${t.content?html}"
-    data-switcher="${t.switcher?html}"
-    data-handle="${t.handle?html}"
-    >${t.title}</li>
-</#list>
-  </ul>
-</div>
-</#if>
-		
-		
         <div class="field">
 	        	        	<label> 风险描述 </label>
           <textarea name="desc" placeholder="风险描述（可不填）"></textarea>
@@ -398,7 +344,7 @@
 
 
 
-<div class="ui modifyRisk modal" data-id="" data-lid="0">
+<div class="ui modifyRisk modal" data-id="">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
@@ -501,31 +447,24 @@
 
 
 
-
-<div class="ui modify modal" data-id="${project.id}" data-rid="<#if role??>${role.id}</#if>">
+<#if plan??>
+<div class="ui modify modal" data-id="${plan.id}">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
     <div class="header">
-      修改项目	      <div class="ui red right floated delete button">删除项目</div>
+      修改计划	      <div class="ui red right floated delete button">删除</div>
     </div>
     <div class="content">
       <form class="ui form" method="post">
         <div class="field">
-            <label> 项目修改 </label>
         	<div class="ui input">
-				  <input type="text" name="name" placeholder="项目名称" value='${project.name}'>
+				  <input type="text" name="name" placeholder="计划名称" value='${plan.name}'>
 			</div>
 
 		</div>
         <div class="field">
-          <textarea name="desc" placeholder="项目描述(可以不填)">${project.description}</textarea>
-        </div>
-        <div class="field">
-        	<label> 角色修改 </label>
-        	<div class="ui input">
-				<input type="text" name="role" placeholder="请输入您的角色"  value='<#if role??>${role.role}</#if>'/>
-			</div>
+          <textarea name="desc" placeholder="计划描述(可以不填)">${plan.description}</textarea>
         </div>
         
       </form>
@@ -541,7 +480,7 @@
 		确认删除？
     </div>
     <div class="content">
-      <p>删除该项目会删除其下的风险条目</p>
+      <p>删除该项目会删除其下未被引用的风险条目</p>
     </div>
     <div class="actions">
       <div class="ui positive button">
@@ -553,65 +492,9 @@
       </div>
     </div>
   </div>
+</#if>
 
-
-<div class="ui small role modal">
-	<div class="ui inverted dimmer">
-	    <div class="ui text loader">提交中</div>
-	</div>
-    <div class="header">
-		角色确认
-    </div>
-    <div class="content">
-      <p>请输入在项目中扮演的角色，比如：开发者，架构师，项目经理等</p>
-		<div class="ui input">
-			<input type="text" name="role" placeholder="请输入您的角色" />
-		</div>
-    </div>
-    <div class="actions">
-      <div class="ui no button">
-       返回列表
-      </div>
-      <div class="ui teal disabled icon button">
-       确认角色
-      </div>
-    </div>
-  </div>
-
-<div class="ui small trailRisk modal">
-	<div class="ui inverted dimmer">
-	    <div class="ui text loader">提交中</div>
-	</div>
-    <div class="header">
-		追踪
-    </div>
-    <div class="content">
-      <p></p>
-      <div class="ui divider"></div>
-<div class="ui yellow floating dropdown button" data-value="0">
-  <div class="text">未发生</div>
-  <div class="menu">
-      <div class="item" data-value="0" data-text="未发生"><div class="ui yellow label">未发生</div></div>
-      <div class="item" data-value="1" data-text="已发生"><div class="ui red label">已发生</div></div>
-      <div class="item" data-value="2" data-text="已消除"><div class="ui green label">已消除</div></div>
-  </div>
-</div>
-		<div class="ui input">
-			<input type="text" name="desc" placeholder="追踪描述" />
-		</div>
-    </div>
-    <div class="actions">
-      <div class="ui no button">
-       返回
-      </div>
-      <div class="ui teal yes button">
-       提交
-      </div>
-    </div>
-  </div>
-
-
-<div class="ui adjustPlan small modal" data-id="0">
+<div class="ui adjustPlan small modal" data-id="<#if plan??>${plan.id}<#else>0</#if>">
 	<div class="ui inverted dimmer">
 	    <div class="ui text loader">提交中</div>
 	</div>
@@ -640,46 +523,15 @@
         <label>复制</label>
       </div>
     </div>
-	 
-	 
- </div>
-</div>
-    </div>
-    <div class="actions">
-      <div class="ui no button">
-        取消
-      </div>
-      <div class="ui positive disabled button">
-       提交
-      </div>
-    </div>
-  </div>
-
-
-
-<div class="ui checkin small modal" data-id="${project.id}">
-	<div class="ui inverted dimmer">
-	    <div class="ui text loader">提交中</div>
-	</div>
-    <div class="header">
-		从计划导入
-    </div>
-    <div class="content">
-<div class="ui form">
-  <div class="inline fields">
-    <label>计划：</label>
+    <#if plan??>
     <div class="field">
-    <div class="ui multiple selection dropdown">
-	  <input name="to" type="hidden" value="">
-	  <i class="dropdown icon"></i>
-	  <div class="default text">选择计划</div>
-	  <div class="menu">
-	  	<#list plans as t>
-	      <div class="item" data-value="${t.id}">${t.name}</div>
-	    </#list>
-	  </div>
-	 </div>
-	 </div>
+      <div class="ui radio checkbox">
+        <input type="radio" data-type="cut" name='type'>
+        <label>转移</label>
+      </div>
+    </div>
+    </#if>
+	 
 	 
  </div>
 </div>
@@ -697,43 +549,7 @@
 
 		<script src="assets/jquery.min.js"></script>
 		<script src="assets/semantic.min.js"></script>
-		<script src="js/risk.js"></script>
-		<script >
-		if(!"${role!''}"){
-			var role=$('.role.modal');
-	    	role.modal('setting', 'closable', false).modal('show');
-	        role.find('input').keypress(function (e){
-	        	if(e.keyCode==13 && $(this).val()!='') {
-	        		role.find('.teal.button')[0].click();
-	        	}
-	        });
-	        role.find('input').bind("input propertychange", function() {
-	            if(role.find('input').val()==''){
-	            	role.find('.teal.button').addClass('disabled');
-	        	} else{
-	        		role.find('.teal.button').removeClass('disabled');
-	        	}
-	       	});
-	        role.find('.no.button').click(function (){
-	        	location.href="/RMS/";
-	        });
-	    	role.find('.teal.button').click(function() {
-	    		role.find('.ui.dimmer').dimmer('show');
-	            $.ajax({
-	                url: '/RMS/addRole',
-	                type: 'post',
-	                dataType:'json',
-	                data: "role="+role.find('input').val()+"&pid=${project.id}",
-	                success: function(msg) {
-	                    if(msg.result!="成功"){
-	                    	alert('出错');
-	                    }
-			        	role.modal('hide');
-	                }
-	            });
-	        });
-	    }
-		</script>
+		<script src="js/planDetail.js"></script>
 
 	</body>
 

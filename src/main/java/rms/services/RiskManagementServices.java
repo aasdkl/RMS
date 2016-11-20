@@ -18,5 +18,11 @@ public interface RiskManagementServices {
 
 	public List<Trail> getAllError();
 
+	public Long getNum();
+
+	public BaseResult addRiskInPlan(int uid, int planId,int state, String name,
+			int possibility, int damage, String desc, String spy,
+			String trigger, String trailer, String plan);
+
 
 }

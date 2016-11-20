@@ -1,5 +1,7 @@
 package rms.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rms.model.base.BaseProject;
@@ -31,6 +33,18 @@ public class Project extends BaseProject<Project> {
 
 	public List<Risk> getRisks() {
 		return Risk.dao.find("select * from risk where project=?",get("id"));
+	}
+	public List<Integer> getRisksIds() {
+		List<Integer> l = new ArrayList<Integer>();
+		List<Risk> list = getRisks();
+		for (Risk risk : list) {
+			l.add(risk.getId());
+			if (risk.getBaseRisk()!=0) {
+				l.add(risk.getBaseRisk());
+			}
+		}
+		Collections.sort(l);
+		return l;
 	}
 
 	

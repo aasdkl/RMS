@@ -7,34 +7,8 @@
 	var modifyModal = $('.modify.modal');
 	var confirmModal = $('.confirm.modal');
 	var addRiskModal = $('.addRisk.modal');
-	var trailModal = $('.trailRisk.modal');
 	var modifyRiskModal = $('.modifyRisk.modal');
 	var adjustPlanModal = $('.adjustPlan.modal');
-	var checkInModal = $('.checkin.modal');
-
-	
-	$('.trail.right.button').click(function(){
-		trailModal.data('id', $(this).parent().parent().data('id'));
-		trailModal.find('.content p').html($(this).parent().find('.header').html());
-    	trailModal.modal('show');
-	});
-	trailModal.find('.no.button').click(function(){
-    	trailModal.modal('hide');
-	});
-	trailModal.find('.yes.button').click(function(){
-		$.ajax({
-			url: '/RMS/addTrail',
-			type: 'post',
-			dataType:'json',
-			data: "id="+trailModal.data('id')+"&desc="+trailModal.find('input').val()+"&state="+trailModal.find('.dropdown').data('value'),
-			success: function(msg) {
-				if(msg.result!="成功"){
-					alert('出错');
-				}
-				window.location.reload();
-			}
-		});
-	});
 	
 	$('.deleteRisk.button').click(function(e){
     	if(e&&e.stopPropagation){
@@ -57,7 +31,7 @@
 	});
 	
 	
-	$('h1').click(function(){
+	$('h1.click').click(function(){
     	modifyModal.modal('show');
     });
     
@@ -70,10 +44,10 @@
     modifyModal.find('.yes.button').click(function(){
     	modifyModal.find('.ui.dimmer').dimmer('show');
         $.ajax({
-            url: '/RMS/modifyProject',
+            url: '/RMS/modifyPlan',
             type: 'post',
             dataType:'json',
-            data: "id="+modifyModal.data('id')+"&name="+modifyModal.find('input:eq(0)').val()+"&desc="+modifyModal.find('textarea').val()+"&role="+modifyModal.find('input:eq(1)').val()+"&rid="+modifyModal.data('rid'),
+            data: "id="+modifyModal.data('id')+"&name="+modifyModal.find('input:eq(0)').val()+"&desc="+modifyModal.find('textarea').val(),
             success: function(msg) {
                 if(msg.result!="成功"){
                 	alert('出错');
@@ -102,7 +76,7 @@
     confirmModal.find('.negative.button').click(function(){
     	modifyModal.find('.ui.dimmer').dimmer('show');
         $.ajax({
-            url: '/RMS/deleteProject',
+            url: '/RMS/deletePlan',
             type: 'post',
             dataType:'json',
             data: "id="+modifyModal.data('id'),
@@ -116,134 +90,127 @@
         });
     });
     
-    
     $('.ui.accordion').accordion({exclusive:false});
+
+    $('.removeRisk').click(function(e){
+    	if(e&&e.stopPropagation){
+    		e.stopPropagation();
+    	} else {
+    		e.cancelBubble=true;
+    	}
+        $.ajax({
+            url: '/RMS/removeRisk',
+            type: 'post',
+            dataType:'json',
+            data: "rid="+$(this).parent().parent().data('id')+"&pid="+$(this).data('id'),
+            success: function(msg) {
+                if(msg.result!="成功"){
+                	alert('出错');
+                }
+                window.location.reload();
+            }
+        });
+	});
     
-adjustPlanModal.find('.dropdown').dropdown({
-		 onChange: function(value, text, $selectedItem) {
-			 if(value.length>0){
-				 adjustPlanModal.find('.positive.button').removeClass('disabled');
-			 } else {
-				 adjustPlanModal.find('.positive.button').addClass('disabled');
-			 }
-		 }
-});
-adjustPlanModal.find('.no.button').click(function(e){
-	adjustPlanModal.modal('hide');
-});
-adjustPlanModal.find('.checkbox').checkbox();
-
-adjustPlanModal.find('.positive.button').click(function(e){
-	adjustPlanModal.find('.ui.dimmer').dimmer('show');
-	var arr = [];
-	$('.menu .checkbox input:checked').parent().parent().parent().each(function(){ arr.push($(this).data('id')); })
-	to = adjustPlanModal.find('.multiple.dropdown').dropdown('get value');
-   $.ajax({
-       url: '/RMS/adjustRisk',
-       type: 'post',
-       dataType:'json',
-       data: "rids="+arr+"&fromP="+adjustPlanModal.data('id')+"&toP="+to+"&type="+adjustPlanModal.find('input:checked').data('type'),
-       success: function(msg) {
-           if(msg.result!="成功"){
-           	alert('出错');
-           }
-           window.location.reload();
-       }
-   });
-});
-
-
-$('.menu .checkbox').click(function(e) {
-  	if(e&&e.stopPropagation){
-		e.stopPropagation();
-	} else {
-		e.cancelBubble=true;
-	}
-});
-$('.menu .checkbox').checkbox({onChange: function() {
-	len = $('.menu .checkbox input:checked').length;
-   $('.save.button span').html(len);
-   if(len<=0){
-   	$('.save.button').addClass('disabled');
-   } else{
-   	$('.save.button').removeClass('disabled');
-   }
-}});
-$('.save.button').click(function(e) {
-	adjustPlanModal.modal('show');
-});
-
-function calculateDistance(elem, mouseX, mouseY) {
-   return Math.floor(Math.sqrt(Math.pow(mouseX - (elem.offset().left+(elem.width()/2)), 2) + Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
-}
-$('.accordion.menu .item').click(function(e){
-   box=$(this).find('.ui.checkbox');
-   distance=100;
-   if(box.length>0)
-   	distance = calculateDistance(box, e.pageX, e.pageY);
-   if(distance<=30){
-   	if(e&&e.stopPropagation){
-   		e.stopPropagation();
-   	} else {
-   		e.cancelBubble=true;
-   	}
-   	box.checkbox('toggle');
-   } else {
-   	if($(e.target).hasClass('item') || $(e.target).hasClass('content')){
-   		$('.ui.accordion').accordion('toggle',$(this).index());
-   	}
-   }
-})
-$(".check.button").click(function(){
-	cb=$('.menu .checkbox');
-	if(cb.hasClass('hidden')){
-		cb.removeClass("hidden");
-		$(this).html("取消");
-		$(this).next().removeClass("hidden");
-		$(this).next().next().addClass("hidden");
-	} else {
-		cb.addClass("hidden");
-		cb.checkbox('uncheck');
-		$(this).html("导出");
-		$(this).next().addClass("hidden");
-		$(this).next().next().removeClass("hidden");
-	}
-});
-$(".checkIn.button").click(function(){
-	checkInModal.modal('show');
-});
-checkInModal.find('.no.button').click(function(e){
-	checkInModal.modal('hide');
-});
-checkInModal.find('.positive.button').click(function(e){
-	checkInModal.find('.ui.dimmer').dimmer('show');
-	to = checkInModal.find('.multiple.dropdown').dropdown('get value');
-   $.ajax({
-       url: '/RMS/checkin',
-       type: 'post',
-       dataType:'json',
-       data: "pid="+checkInModal.data('id')+"&plans="+to,
-       success: function(msg) {
-           if(msg.result!="成功"){
-           	alert('出错');
-           }
-           window.location.reload();
-       }
-   });
-});
-checkInModal.find('.dropdown').dropdown({
-	 onChange: function(value, text, $selectedItem) {
-		 if(value.length>0){
-			 checkInModal.find('.positive.button').removeClass('disabled');
-		 } else {
-			 checkInModal.find('.positive.button').addClass('disabled');
-		 }
-	 }
-});
-
-
+    adjustPlanModal.find('.dropdown').dropdown({
+    		 onChange: function(value, text, $selectedItem) {
+    			 if(value.length>0){
+    				 adjustPlanModal.find('.positive.button').removeClass('disabled');
+    			 } else {
+    				 adjustPlanModal.find('.positive.button').addClass('disabled');
+    			 }
+    		 }
+    });
+    adjustPlanModal.find('.no.button').click(function(e){
+		adjustPlanModal.modal('hide');
+    });
+    adjustPlanModal.find('.checkbox').checkbox();
+    
+    adjustPlanModal.find('.positive.button').click(function(e){
+    	adjustPlanModal.find('.ui.dimmer').dimmer('show');
+    	var arr = [];
+    	$('.menu .checkbox input:checked').parent().parent().parent().each(function(){ arr.push($(this).data('id')); })
+    	to = adjustPlanModal.find('.multiple.dropdown').dropdown('get value');
+        $.ajax({
+            url: '/RMS/adjustRisk',
+            type: 'post',
+            dataType:'json',
+            data: "rids="+arr+"&fromP="+adjustPlanModal.data('id')+"&toP="+to+"&type="+adjustPlanModal.find('input:checked').data('type'),
+            success: function(msg) {
+                if(msg.result!="成功"){
+                	alert('出错');
+                }
+                window.location.reload();
+            }
+        });
+    });
 
     
+    $('.menu .checkbox').click(function(e) {
+       	if(e&&e.stopPropagation){
+    		e.stopPropagation();
+    	} else {
+    		e.cancelBubble=true;
+    	}
+    });
+	$('.menu .checkbox').checkbox({onChange: function() {
+		len = $('.menu .checkbox input:checked').length;
+        $('.save.button span').html(len);
+        if(len<=0){
+        	$('.save.button').addClass('disabled');
+        } else{
+        	$('.save.button').removeClass('disabled');
+        }
+    }});
+	$('.save.button').click(function(e) {
+		adjustPlanModal.modal('show');
+	});
+   
+    function calculateDistance(elem, mouseX, mouseY) {
+        return Math.floor(Math.sqrt(Math.pow(mouseX - (elem.offset().left+(elem.width()/2)), 2) + Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
+    }
+    $('.accordion.menu .item').click(function(e){
+        box=$(this).find('.ui.checkbox');
+        distance=100;
+        if(box.length>0)
+        	distance = calculateDistance(box, e.pageX, e.pageY);
+        if(distance<=30){
+        	if(e&&e.stopPropagation){
+        		e.stopPropagation();
+        	} else {
+        		e.cancelBubble=true;
+        	}
+        	box.checkbox('toggle');
+        } else {
+        	if($(e.target).hasClass('item') || $(e.target).hasClass('content')){
+        		$('.ui.accordion').accordion('toggle',$(this).index());
+        	}
+        }
+    })
+    $(".check.button").click(function(){
+    	cb=$('.menu .checkbox');
+    	if(cb.hasClass('hidden')){
+    		cb.removeClass("hidden");
+    		$(this).html("取消");
+    		$(this).next().removeClass("hidden");
+    	} else {
+    		cb.addClass("hidden");
+    		cb.checkbox('uncheck');
+    		$(this).html("导出");
+    		$(this).next().addClass("hidden");
+    	}
+	});
+    
+    $('.single.button').click(function(){
+    	if($(this).html().startsWith('隐藏')){
+    		$(this).html('显示引用');
+    	} else {
+    		$(this).html('隐藏引用');
+    	}
+    	$('.accordion.menu .item').not('.add').each(function(){
+    		combineFilter($(this));
+    	});
+    });
     
     $('.accordion.menu .content .celled.table').hover(
        function(){ $(this).parent().addClass('raised'); },
@@ -253,9 +220,9 @@ checkInModal.find('.dropdown').dropdown({
     
 	addRiskModal.modal({autofocus: false});
     modifyRiskModal.modal({autofocus: false});
-    trailModal.modal({autofocus: false});
 
     $('.accordion.menu>.add.item').click(function(){
+    	resetAddRisk();
     	addRiskModal.modal('show');
     });
     
@@ -274,7 +241,6 @@ checkInModal.find('.dropdown').dropdown({
     	labels=self.find('.label');
     	t=modifyRiskModal.find('input,textarea,.dropdown');
     	modifyRiskModal.data('id', titleDom.parent().data('id'));
-    	modifyRiskModal.data('lid', titleDom.parent().data('lid'));
     	restoreDropdown(t[0], titleDom.find('.label').data('value'))
     	t[1].value=titleDom.find('.header').html().trim();
     	
@@ -325,21 +291,14 @@ checkInModal.find('.dropdown').dropdown({
     	}
     });
     
-    trailModal.find('.ui.dropdown').dropdown({
-    	onChange:function(value,text){
-	    	$(this).removeClass(colors1.join(' '));
-	    	$(this).addClass(colors1[value]);
-	   	}
-    });
 
     
     
-    addRiskModal.find('.no.button').click(function(){
-    	addRiskModal.modal('hide');
-    	resetAddRisk();
-    })
     modifyRiskModal.find('.no.button').click(function(){
     	modifyRiskModal.modal('hide');
+    })
+    addRiskModal.find('.no.button').click(function(){
+    	addRiskModal.modal('hide');
     })
     
     required=addRiskModal.find('.required input, .required textarea');
@@ -356,12 +315,11 @@ checkInModal.find('.dropdown').dropdown({
     		addRiskModal.find('.yes.button').addClass('disabled');
     	}
    	});
-
+    
     addRiskModal.find('.yes.button').click(function(){
     	addRiskModal.find('.ui.dimmer').dimmer('show');
     	t=addRiskModal.find('input,textarea,.dropdown');
     	var fields = {
-    		lid: addRiskModal.data('lid'),
         	state: $(t[0]).data('value'),
         	name: t[1].value,
         	possibility: $(t[2]).data('value'),
@@ -371,10 +329,10 @@ checkInModal.find('.dropdown').dropdown({
         	trigger: t[6].value,
         	trailer: t[7].value,
         	plan: t[8].value,
-        	pid: addRiskModal.data('id')
+        	planId: addRiskModal.data('id')
         };
         $.ajax({
-            url: '/RMS/addRisk',
+            url: '/RMS/addRiskInPlan',
             type: 'post',
             dataType:'json',
             data: fields,
@@ -382,7 +340,7 @@ checkInModal.find('.dropdown').dropdown({
                 if(msg.result!="成功"){
                 	alert('出错');
                 }
-                modifyModal.find('.ui.dimmer').dimmer('hide');
+                addRiskModal.find('.ui.dimmer').dimmer('hide');
                 window.location.reload();
             }
         });
@@ -418,14 +376,9 @@ checkInModal.find('.dropdown').dropdown({
         });
     });
 
-    $('.message .close').on('click', function() {
-      $(this).closest('.message').transition('fade');
-    });
-    
     
     function resetAddRisk(){
     	t=addRiskModal.find('input,textarea,.dropdown');
-    	addRiskModal.data('lid',0);
 
     	restoreDropdown(t[0], 0);
     	t[1].value="";
@@ -440,29 +393,8 @@ checkInModal.find('.dropdown').dropdown({
     	addRiskModal.find('.yes.button').addClass('disabled');
     }
     
-    $('li').click(function(){
-    	s=$(this);
-    	if(s.hasClass('select')){
-    		s.removeClass('select')
-    		resetAddRisk();
-    	} else{
-    		$('li').removeClass('select')
-        	s.addClass('select');
-        	t=addRiskModal.find('input,textarea,.dropdown');
-        	addRiskModal.data('lid',s.data('id'));
-        	
-        	t[1].value=s.html();
-        	t[1].disabled='disabled';
-        	restoreDropdown(t[2], s.data('probability'));
-        	restoreDropdown(t[3], s.data('effect'));
-        	t[4].value=s.data('content');
-        	t[5].value=s.data('spy');
-        	t[6].value=s.data('switcher');
-        	t[8].value=s.data('handle');
-        	
-        	addRiskModal.find('.yes.button').removeClass('disabled');
-    	}
-    });
+
+    
     
     // filter
     
@@ -474,18 +406,16 @@ checkInModal.find('.dropdown').dropdown({
     });
     function combineFilter(t){
     	val=$("input.search").val();
+    	isShowLink = $('.single.button').html().startsWith('隐藏');
     	from = formatDate($('input.filter')[0].value);
     	to = formatDate($('input.filter')[1].value);
 		date=t.find('.time').html().trim().split(" ")[0];
-		if(date<from || date>to || t.find('.title span').html().indexOf(val)<0){
+		if((!isShowLink && t.data('lid')!=0 && t.data('id')!=t.data('lid')) || date<from || date>to || t.find('.title span').html().indexOf(val)<0){
 			t.addClass('hidden');
 		} else {
 			t.removeClass('hidden');
 		}
     }
-
-    
-    
     
     $('.reset.button').click(function(){
     	$("input.search").val("");
@@ -500,6 +430,7 @@ checkInModal.find('.dropdown').dropdown({
     });
     $("input.filter").bind("input propertychange", function() {
     	regTime = /^(\d{4})-(0[1-9]|[1-9]|1[0-2])-([1-9]|0[1-9]|[12]\d{1}|3[01])$/;
+    	
     	if(!regTime.test($(this).val())){
     		$(this).parent().addClass('error');
     	} else {
@@ -508,8 +439,6 @@ checkInModal.find('.dropdown').dropdown({
     	}
    	});
     function filter(){
-    	from = formatDate($('input.filter')[0].value);
-    	to = formatDate($('input.filter')[1].value);
     	
     	$('.accordion.menu .item').not('.add').each(function(){
     		combineFilter($(this));

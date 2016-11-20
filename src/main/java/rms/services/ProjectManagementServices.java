@@ -25,5 +25,7 @@ public interface ProjectManagementServices {
 	
 	public BaseResult addTrail(int id, String desc, int state, int loginId);
 	public Date getOldestDate();
+	public BaseResult checkin(int pid, int[] plans, int uid);
+	
 
 }

@@ -11,9 +11,11 @@ import com.jfinal.aop.Before;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
+import rms.model.Plan;
 import rms.model.Project;
 import rms.model.Risk;
 import rms.model.Trail;
+import rms.model.Type;
 import rms.model.User;
 import rms.model.Role;
 import rms.services.ProjectManagementServices;
@@ -72,11 +74,13 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 		ProjectVO vo = new ProjectVO();
 		Project project = Project.dao.findById(projectId);
 		vo.setProject(project);
-		
 		List<Risk> recommands=Risk.dao.recommand(projectId);
 		vo.setRecommand(recommands);
 		
 		List<RiskVO> rvo = new ArrayList<RiskVO>();
+		if (project==null) {
+			return vo;
+		}
 		List<Risk> risks = project.getRisks();
 		List<Trail> tTrails;
 		List<TrailVO> trails;
@@ -100,7 +104,7 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 			}
 			List<Risk> links = new ArrayList<Risk>();
 			if (risk.getBaseRisk()>0) {
-				links=Risk.dao.find("select id,time from risk where baseRisk=?",risk.getBaseRisk());
+				links=Risk.dao.find("select id,time from risk where baseRisk=? and project!=-1",risk.getBaseRisk());
 			} else {
 				links.add(risk);
 			}
@@ -129,7 +133,7 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 			String trigger, String trailer, String plan, int lid) {
 
 		if (name!=null&&!name.equals("")) {
-			if (new Risk().add(uid, pid, state, name, possibility, damage, desc, spy, trigger, trailer, plan, lid)) {
+			if (new Risk().add(uid, pid, state, name, possibility, damage, desc, spy, trigger, trailer, plan, lid)!=0) {
 				return BaseResult.SUCCESS;
 			}
 		}
@@ -169,7 +173,30 @@ public class ProjectManagementServicesImpl implements ProjectManagementServices{
 
 	@Override
 	public Date getOldestDate() {
-		return Risk.dao.findFirst("select min(time) as time from risk").getDate("time");
+		return Risk.dao.findFirst("select min(time) as time from risk where project!=-1").getDate("time");
+	}
+
+	@Override
+	public BaseResult checkin(int pid, int[] plans, int uid) {
+		List<Integer> existRisks = Project.dao.findById(pid).getRisksIds();
+		
+		for (int plan : plans) {
+			List<Type> list = Type.dao.findAllByPlan(plan);
+			for (Type type : list) {
+				if (Collections.binarySearch(existRisks, type.getRisk())<0) {
+					Risk r = Risk.dao.findById(type.getRisk());
+					int l=r.getBaseRisk();
+					if (l==0) {
+						l=r.getId();
+					}
+					addRisk(uid, pid, (int)r.getState(), r.getTitle(), (int)r.getProbability(), 
+							(int)r.getEffect(), r.getContent(), r.getSpy(), r.getSwitcher(), 
+							r.getTrailer(), r.getHandle(), l);
+				}
+			}
+		}
+		
+		return BaseResult.SUCCESS;
 	}
 
 

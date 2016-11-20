@@ -1,0 +1,43 @@
+﻿body {
+    background-color: #FAFAFA;
+}
+.menu a.header {
+	color: rgba(0,0,0,.85);
+}
+.menu a.header:hover {
+	color: black;
+}
+
+tr{
+	cursor: pointer;
+}
+
+tr.positive td.modify i {
+	display:none;
+}
+
+tr:not(.positive) td.modify i {
+	opacity: 0;
+}
+
+tr:not(.positive):hover td.modify i {
+	opacity: 0.5;
+	transition: all 0.3s;  
+}
+
+tr:not(.positive):hover td.modify:hover i{
+	opacity: 1.0;
+	transform: scale(1.5);
+}
+
+#addPlan{
+	cursor: pointer;
+}
+
+#addPlan:hover{
+	background: #f3f3f3;
+}
+
+.delete.button{
+	margin-top:-.4em;
+}

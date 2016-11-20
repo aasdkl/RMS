@@ -12,7 +12,6 @@ import rms.model.base.BaseRisk;
 | id          | int(12)   | NO   | PRI | NULL              | auto_increment     |
 | title       | text      | YES  |     | NULL              |     |
 | state       | int(1)    | NO   |     | NULL              |     |
-| style       | text      | YES  |     | NULL              |     |
 | content     | text      | YES  |     | NULL              |     |
 | probability | int(1)    | NO   |     | NULL              |     |
 | effect      | int(1)    | NO   |     | NULL              |     |
@@ -31,17 +30,32 @@ import rms.model.base.BaseRisk;
 public class Risk extends BaseRisk<Risk> {
 	public static final Risk dao = new Risk();
 
-	public boolean add(int uid, int pid, int state, String name,
+	public int add(int uid, int pid, int state, String name,
 			int possibility, int damage, String desc, String spy,
 			String trigger, String trailer, String plan, int lid) {
 		if (lid!=0) {
 			Risk risk = new Risk().findById(lid);
-			risk.set("baseRisk", risk.getId()).update();
+			if (risk.getProject()==-1 && risk.getBaseRisk()==0) {
+				// is added in plan
+				risk.set("title", name).set("state", state).set("content", desc)
+					.set("probability", possibility).set("effect", damage).set("spy", spy)
+					.set("avoid", "").set("switcher", trigger).set("handle", plan).set("trailer", trailer)
+					.set("project", pid).set("publisher", uid).set("baseRisk", 0).update();
+				return risk.getId();
+			} else {
+				risk.set("baseRisk", risk.getId()).update();
+			}
 		}
-		return new Risk().set("title", name).set("state", state).set("content", desc)
+		
+		Risk r = new Risk();
+		r.set("title", name).set("state", state).set("content", desc)
 				.set("probability", possibility).set("effect", damage).set("spy", spy)
 				.set("avoid", "").set("switcher", trigger).set("handle", plan).set("trailer", trailer)
 				.set("project", pid).set("publisher", uid).set("baseRisk", lid).save();
+		
+		new Trail().add(r.getId(), "新建风险", state, uid);
+		
+		return r.getId();
 	}
 
 	public boolean modify(int rid, int state, String name, int possibility,
@@ -55,7 +69,7 @@ public class Risk extends BaseRisk<Risk> {
 
 	public List<Risk> recommand(int projectId) {
 		int n = 3;
-		List<Risk> r = dao.find("select * from risk where project!=? and baseRisk!=0 group by baseRisk", projectId);
+		List<Risk> r = dao.find("select * from risk where project!=? and project!=-1 and baseRisk!=0 group by baseRisk", projectId);
 		for (int i=r.size()-1; i>=0; i--) {
 			int base=r.get(i).getBaseRisk();
 			if (dao.find("select * from risk where project=? and baseRisk=?", projectId, base).size()!=0) {
@@ -69,6 +83,10 @@ public class Risk extends BaseRisk<Risk> {
 			r=r.subList(0, 3);
 		}
 		return r;
+	}
+
+	public List<Risk> findAll() {
+		return dao.find("select * from risk where project!=-1 or baseRisk=0");
 	}
 
 }

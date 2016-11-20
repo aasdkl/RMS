@@ -45,8 +45,7 @@
 			data : []
 		} ]
 	};
-	myChart.setOption(option)
-	
+	myChart.setOption(option);
 	
 	
     $('.project').click(function(){
@@ -151,7 +150,6 @@
 			}
 		}
 		resetD();
-		console.log(trailst)
 		tl={}
 		for(a in trailst){
 			riskId=trailst[a]

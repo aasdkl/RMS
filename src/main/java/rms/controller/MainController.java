@@ -1,7 +1,9 @@
 package rms.controller;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
+import rms.model.Plan;
 import rms.model.User;
 import rms.config.ReturnConstants;
 import rms.interceptor.IndexInterceptor;
@@ -19,6 +21,7 @@ import com.jfinal.core.Controller;
 public class MainController extends Controller {
 
     private UserManagementServices userManageservice = new UserManagementServicesImpl();
+    private PlanManagementServices planManageservice = new PlanManagementServicesImpl();
     private ProjectManagementServices projectManageservice = new ProjectManagementServicesImpl();
     private RoleManagementServices roleManageservice = new RoleManagementServicesImpl();
     private RiskManagementServices riskManageservice = new RiskManagementServicesImpl();
@@ -130,7 +133,7 @@ public class MainController extends Controller {
 			return;
 		}
     	ProjectVO project = projectManageservice.getProject(Integer.valueOf(id));
-    	if (!project.isValid()) {//judge id ok 
+    	if (project!=null&&!project.isValid()) {//judge id ok 
 			redirect("/");
 			return;
 		}
@@ -140,6 +143,8 @@ public class MainController extends Controller {
 		setAttr("oldDate", project.getOldestDate());
 		setAttr("recommands", project.getRecommand());
 		setAttr("role", roleManageservice.getRole(getLoginId(), project.getProject().getId()));
+		setAttr("plans", planManageservice.getPlans());
+
 		render("risk.html");
 		
     }
@@ -217,12 +222,18 @@ public class MainController extends Controller {
     	
     }
     
+    public void checkin() {
+    	int pid=getParaToInt("pid");
+    	int[] plans=toIntArr(getPara("plans"));
+    	BaseResult result = projectManageservice.checkin(pid, plans, getLoginId());
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	renderJson();
+    }
+    
+    
+    
     // -----------------------------statistic--------------------------
-@Clear
     public void statistic() {
-UserVO result = userManageservice.login("qwe", "qwe");
-setLogin(result);
-
 		setAttr("trail", riskManageservice.getAllError());
 		setAttr("risk", riskManageservice.getAll());
 
@@ -231,8 +242,123 @@ setLogin(result);
 		render("statistic.html");
 
     }
+// -----------------------------plan--------------------------
+@Clear
+	public void plan() {
+UserVO result = userManageservice.login("qwe", "qwe");
+setLogin(result);
 
-    
-    
-    
+		String id = getPara();
+		if (id==null||id.isEmpty()){
+			setAttr("allNum", riskManageservice.getNum());
+			setAttr("projects", projectManageservice.getProjects());
+			setAttr("plans", planManageservice.getPlans());
+			render("plan.html");
+			return;
+		}
+		
+		if (!isInteger(id)) {
+			redirect("/plan");
+			return;
+		}
+		
+		int pid = Integer.valueOf(id);
+		PlanVO plan = planManageservice.getPlan(pid);
+		if (plan!=null && pid!=0 && !plan.isValid()) {//judge id ok 
+			redirect("/plan");
+			return;
+		}
+		
+		// pid==0 means show all
+		setAttr("projects", projectManageservice.getProjects());
+		setAttr("risk", plan.getRisks());
+		setAttr("plans", planManageservice.getPlans());
+		setAttr("plan", plan.getPlan());
+		setAttr("oldDate", plan.getOldestDate());
+		render("planDetail.html");
+	}
+
+	public void addPlan() {
+	    String name = getPara("name");
+	    String desc = getPara("desc");
+	    BaseResult result = planManageservice.addPlan(name, desc);
+	    setAttr(ReturnConstants.result.toString(), result.getInfo());
+	
+	    renderJson();
+	}
+	
+	public void deletePlan() {
+		int id = getParaToInt("id");
+		BaseResult result = planManageservice.deletePlan(id);
+		setAttr(ReturnConstants.result.toString(), result.getInfo());
+		
+		renderJson();
+	}
+	
+	public void removeRisk() {
+		int rid = getParaToInt("rid");
+		int pid = getParaToInt("pid");
+		BaseResult result = planManageservice.removeRisk(rid,pid);
+		setAttr(ReturnConstants.result.toString(), result.getInfo());
+		
+		renderJson();
+	}
+	
+	public void modifyPlan() {
+		int id = getParaToInt("id");
+		String name = getPara("name");
+		String desc = getPara("desc");
+		BaseResult result = planManageservice.modifyPlan(id, name, desc);
+	
+		setAttr(ReturnConstants.result.toString(), result.getInfo());
+		
+		renderJson();
+	}
+	
+    public void addRiskInPlan() {
+    	int state=getParaToInt("state");
+    	String name=getPara("name");
+    	int possibility=getParaToInt("possibility");
+    	int damage=getParaToInt("damage");
+    	String desc=getPara("desc");
+    	String spy=getPara("spy");
+    	String trigger=getPara("trigger");
+    	String trailer=getPara("trailer");
+    	String plan=getPara("plan");
+    	int planId=getParaToInt("planId");
+    	int uid=getLoginId();
+
+    	BaseResult result = riskManageservice.addRiskInPlan(uid,planId,state,name,possibility,damage,desc,spy,trigger,trailer,plan);
+    	
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	
+    	renderJson();
+    }
+
+    public void adjustRisk(){
+    	int[] rids=toIntArr(getPara("rids"));
+    	int[] toPlan=toIntArr(getPara("toP"));
+    	int fromPlan=getParaToInt("fromP");
+    	String type=getPara("type");
+    	if (fromPlan==0) {
+			type="copy";
+		}
+    	BaseResult result = planManageservice.adjust(rids,toPlan,fromPlan,type);
+    	
+    	
+    	setAttr(ReturnConstants.result.toString(), result.getInfo());
+    	renderJson();
+    }
+
+	private int[] toIntArr(String str) {
+		String[] s = str.split(",");
+		int[] re = new int[s.length];
+		for (int i = 0; i < s.length; i++) {
+			re[i]=Integer.valueOf(s[i].trim());
+		}
+		return re;
+	}
+
+	
+	    
 }

@@ -33,14 +33,6 @@ public abstract class BaseRisk<M extends BaseRisk<M>> extends Model<M> implement
 		return get("state");
 	}
 
-	public void setStyle(java.lang.String style) {
-		set("style", style);
-	}
-
-	public java.lang.String getStyle() {
-		return get("style");
-	}
-
 	public void setContent(java.lang.String content) {
 		set("content", content);
 	}
