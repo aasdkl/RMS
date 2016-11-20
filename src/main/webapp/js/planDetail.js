@@ -193,11 +193,13 @@
     		cb.removeClass("hidden");
     		$(this).html("取消");
     		$(this).next().removeClass("hidden");
+    		$(this).next().next().addClass("hidden");;
     	} else {
     		cb.addClass("hidden");
     		cb.checkbox('uncheck');
     		$(this).html("导出");
     		$(this).next().addClass("hidden");
+    		$(this).next().next().removeClass("hidden");;
     	}
 	});
     
